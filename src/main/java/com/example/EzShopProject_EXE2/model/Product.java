@@ -29,8 +29,9 @@ public class Product {
 
 
     @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable( name= "category_product",
+    @JoinTable(name = "category_product",
             joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id",nullable = true))
+            inverseJoinColumns = @JoinColumn(name = "category_id", nullable = true))
     private List<Category> categories;
+
 }
