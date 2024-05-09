@@ -3,6 +3,8 @@ package com.example.EzShopProject_EXE2.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "product")
 @Getter
@@ -25,4 +27,10 @@ public class Product {
     private int brand;
     private int weight;
 
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable( name= "category_product",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id",nullable = true))
+    private List<Category> categories;
 }

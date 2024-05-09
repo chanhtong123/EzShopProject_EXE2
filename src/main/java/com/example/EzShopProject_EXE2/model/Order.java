@@ -1,12 +1,11 @@
 package com.example.EzShopProject_EXE2.model;
-
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "order")
+@Table(name = "order_table")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,9 +20,9 @@ public class Order {
 
     private int status;
 
-    private Long userId; 
+    private Long userId;
 
-    private Long shopId; 
+    private Long shopId;
 
-    private Long orderDetailId; 
+    private Long orderDetailId;
 }
