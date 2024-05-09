@@ -13,11 +13,11 @@ import lombok.*;
 public class Shop {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long ShopId;
-private String Name;
-private String Address;
-private String PhoneNumber;
-private double wallet;
-private int status;
-private Long owner;
+private Long shopId;
+    private String name;
+    private String address;
+    private String phoneNumber;
+    private double wallet;
+    private int status;
+    private Long owner;
 }
