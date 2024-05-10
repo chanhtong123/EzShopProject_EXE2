@@ -3,7 +3,9 @@ package com.example.EzShopProject_EXE2.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -26,11 +28,14 @@ public class Product {
     private int category;
     private int brand;
     private int weight;
-
-
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable( name= "category_product",
+    @ManyToMany
+    @JoinTable(name = "product_category",
             joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id",nullable = true))
-    private List<Category> categories;
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
+
+    @OneToOne(mappedBy = "product")
+    private Shop shop;
+    @OneToMany(mappedBy = "product")
+    private Set<OrderDetail> orderDetails = new HashSet<>();
 }

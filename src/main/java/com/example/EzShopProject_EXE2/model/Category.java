@@ -3,6 +3,9 @@ package com.example.EzShopProject_EXE2.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "category")
 @Getter
@@ -16,4 +19,6 @@ public class Category {
     private Long id;
 
     private String name;
+    @ManyToMany(mappedBy = "categories")
+    private Set<Product> products = new HashSet<>();
 }

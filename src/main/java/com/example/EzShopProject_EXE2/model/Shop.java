@@ -31,4 +31,7 @@ private Long shopId;
 
     @Column(name = "owner")
     private Long owner;
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

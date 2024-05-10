@@ -19,7 +19,14 @@ public class OrderDetail {
 
     private int quantity;
 
-    private double price; 
+    private double price;
 
-    private Long productId; 
+//    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 }
