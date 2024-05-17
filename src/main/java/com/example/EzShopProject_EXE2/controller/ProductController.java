@@ -1,4 +1,4 @@
-package com.example.EzShopProject_EXE2.Controller;
+package com.example.EzShopProject_EXE2.controller;
 
 import com.example.EzShopProject_EXE2.model.Product;
 import com.example.EzShopProject_EXE2.service.IProductService;
