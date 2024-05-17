@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -28,6 +29,11 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryDto categoryDto) {
         CategoryDto updatedCategory = categoryService.updateCategory(id, categoryDto);
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+    }
+    @GetMapping
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
 }
