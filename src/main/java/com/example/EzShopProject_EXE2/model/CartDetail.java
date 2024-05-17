@@ -20,4 +20,6 @@ public class CartDetail {
     private Long productId; 
 
     private int quantity;
+
+
 }

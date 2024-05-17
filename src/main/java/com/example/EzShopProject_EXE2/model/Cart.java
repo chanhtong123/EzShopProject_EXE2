@@ -20,4 +20,8 @@ public class Cart {
     private Long orderId; 
 
     private Long userId;
+
+    @OneToOne
+    @JoinColumn(name = "cart_Detail_id")
+    private CartDetail cartDetail;
 }

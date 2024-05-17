@@ -27,7 +27,15 @@ public class Order {
 
     private Long shopId;
 
-    private Long orderDetailId;
-    @OneToMany(mappedBy = "order")
-    private List<OrderDetail> orderDetails;
+//    private Long orderDetailId;
+//    @OneToMany(mappedBy = "order")
+//    private List<OrderDetail> orderDetails;
+
+    @OneToOne
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
+
+    @OneToOne
+    @JoinColumn(name = "orderDetail_id")
+    private OrderDetail detail;
 }
