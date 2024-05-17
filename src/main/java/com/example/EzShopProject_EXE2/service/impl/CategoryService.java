@@ -7,6 +7,10 @@ import com.example.EzShopProject_EXE2.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CategoryService implements ICategoryService {
     private final CategoryRepository categoryRepository;
@@ -19,6 +23,29 @@ public class CategoryService implements ICategoryService {
         Category savedCategory = categoryRepository.save(category);
         return mapToDto(savedCategory);
     }
+
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
+        Optional<Category> optionalCategory = categoryRepository.findById(id);
+        if (optionalCategory.isPresent()) {
+            Category existingCategory = optionalCategory.get();
+            existingCategory.setName(categoryDto.getName());
+            Category updatedCategory = categoryRepository.save(existingCategory);
+            return mapToDto(updatedCategory);
+        } else {
+            throw new RuntimeException("Category not found");
+        }
+    }
+
+    public List<CategoryDto> getAllCategories() {
+        List<CategoryDto> result = new ArrayList<>();
+        List<Category> categories = categoryRepository.findAll();
+        for (Category item : categories) {
+            CategoryDto dto = mapToDto(item);
+            result.add(dto);
+        }
+        return result;
+    }
+
 
     private CategoryDto mapToDto(Category category) {
         CategoryDto categoryDto = new CategoryDto();
