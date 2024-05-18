@@ -22,6 +22,7 @@ public class CartDetailService implements ICartDetailService {
 
     @Override
     public Optional<CartDetail> getCartDetailById(Long id) {
+
         return cartDetailRepository.findById(id);
     }
 
@@ -45,7 +46,7 @@ public class CartDetailService implements ICartDetailService {
 
             return cartDetailRepository.save(existingCartDetail);
         } else {
-            return null; // or throw an exception if preferred
+            return null;
         }
     }
 
