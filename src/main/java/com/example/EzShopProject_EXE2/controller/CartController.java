@@ -1,8 +1,10 @@
 package com.example.EzShopProject_EXE2.controller;
 
+import com.example.EzShopProject_EXE2.exception.CartException;
 import com.example.EzShopProject_EXE2.model.Cart;
 import com.example.EzShopProject_EXE2.service.ICartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
