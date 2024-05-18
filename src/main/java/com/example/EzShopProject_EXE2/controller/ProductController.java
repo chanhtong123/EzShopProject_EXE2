@@ -21,7 +21,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/getProductById/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
         try {
             Product product = productService.getProductById(id);
@@ -30,7 +30,5 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
 
 }
