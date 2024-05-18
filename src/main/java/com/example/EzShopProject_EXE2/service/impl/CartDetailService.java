@@ -32,12 +32,23 @@ public class CartDetailService implements ICartDetailService {
 
     @Override
     public CartDetail updateCartDetail(Long id, CartDetail cartDetail) {
-        if (cartDetailRepository.existsById(id)) {
-            cartDetail.setId(id);
-            return cartDetailRepository.save(cartDetail);
+        Optional<CartDetail> existingCartDetailOptional = cartDetailRepository.findById(id);
+        if (existingCartDetailOptional.isPresent()) {
+            CartDetail existingCartDetail = existingCartDetailOptional.get();
+
+            if (cartDetail.getProductId() != null) {
+                existingCartDetail.setProductId(cartDetail.getProductId());
+            }
+            if (cartDetail.getQuantity() != 0) {
+                existingCartDetail.setQuantity(cartDetail.getQuantity());
+            }
+
+            return cartDetailRepository.save(existingCartDetail);
+        } else {
+            return null; // or throw an exception if preferred
         }
-        return null;
     }
+
 
     @Override
     public void deleteCartDetail(Long id) {
