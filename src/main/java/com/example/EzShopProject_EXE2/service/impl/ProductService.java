@@ -80,8 +80,30 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> getAllProduct() {
-        return null;
+    public List<ProductDto> getAllProduct() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<ProductDto> searchProducts(String name, Double price, Integer brand) {
+        List<Product> products;
+
+        if (name != null && price != null && brand != null) {
+            products = productRepository.findByNameContainingAndPriceAndBrand(name, price, brand);
+        } else if (name != null) {
+            products = productRepository.findByNameContaining(name);
+        } else if (price != null) {
+            products = productRepository.findByPrice(price);
+        } else if (brand != null) {
+            products = productRepository.findByBrand(brand);
+        } else {
+            products = productRepository.findAll();
+        }
+
+        return products.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     private ProductDto mapToDto(Product product) {

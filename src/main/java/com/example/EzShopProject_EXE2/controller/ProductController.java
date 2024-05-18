@@ -11,9 +11,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
-        @RequestMapping("/api/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final IProductService productService;
@@ -47,5 +48,14 @@ public class ProductController {
         }
 
     }
-
+    @PostMapping("/search")
+    public ResponseEntity<List<ProductDto>> searchProducts(@RequestBody ProductDto searchCriteria) {
+        List<ProductDto> products = productService.searchProducts(searchCriteria.getName(), searchCriteria.getPrice(), searchCriteria.getBrand());
+        return ResponseEntity.ok(products);
+    }
+    @GetMapping
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
+        List<ProductDto> products = productService.getAllProduct();
+        return ResponseEntity.ok(products);
+    }
 }

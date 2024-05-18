@@ -10,5 +10,6 @@ public interface IProductService {
  Product getProductById(long id) throws Exception;
  ProductDto createProduct(ProductDto productDto) throws DataNotFoundException;
  ProductDto updateProduct(Long id, ProductDto productDto) throws Exception;
- List<Product> getAllProduct();
+ List<ProductDto> getAllProduct();
+  List<ProductDto> searchProducts(String name, Double price, Integer brand);
 }
