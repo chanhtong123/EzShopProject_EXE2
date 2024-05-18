@@ -46,9 +46,37 @@ public class ProductService implements IProductService {
         return mapToDto(savedProduct);
     }
 
-    @Override
-    public Product updateProduct(Long id, Product product) throws Exception {
-        return null;
+
+
+
+    public ProductDto updateProduct(Long id, ProductDto productDto) throws Exception {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find product with id: " + id));
+
+        // Cập nhật thông tin sản phẩm từ DTO
+        existingProduct.setName(productDto.getName());
+        existingProduct.setPrice(productDto.getPrice());
+        existingProduct.setDescription(productDto.getDescription());
+        existingProduct.setStatus(productDto.getStatus());
+        existingProduct.setQuantity(productDto.getQuantity());
+        existingProduct.setCategory(productDto.getCategory());
+        existingProduct.setBrand(productDto.getBrand());
+        existingProduct.setWeight(productDto.getWeight());
+
+        // Cập nhật categories
+        Set<Category> categories = new HashSet<>();
+        for (CategoryDto categoryDto : productDto.getCategories()) {
+            Category existingCategory = categoryRepository
+                    .findById(categoryDto.getId())
+                    .orElseThrow(() -> new DataNotFoundException(
+                            "Cannot find category with id: " + categoryDto.getId()));
+            categories.add(existingCategory);
+        }
+        existingProduct.setCategories(categories);
+
+        // Lưu sản phẩm đã cập nhật vào cơ sở dữ liệu
+        Product updatedProduct = productRepository.save(existingProduct);
+        return mapToDto(updatedProduct);
     }
 
     @Override

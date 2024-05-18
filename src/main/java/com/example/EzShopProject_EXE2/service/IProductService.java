@@ -9,6 +9,6 @@ import java.util.List;
 public interface IProductService {
  Product getProductById(long id) throws Exception;
  ProductDto createProduct(ProductDto productDto) throws DataNotFoundException;
- Product updateProduct(Long id, Product product) throws Exception;
+ ProductDto updateProduct(Long id, ProductDto productDto) throws Exception;
  List<Product> getAllProduct();
 }

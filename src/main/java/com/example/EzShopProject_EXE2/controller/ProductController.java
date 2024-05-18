@@ -7,6 +7,7 @@ import com.example.EzShopProject_EXE2.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,7 +23,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/getProductById/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
         try {
             Product product = productService.getProductById(id);
@@ -36,7 +37,15 @@ public class ProductController {
         ProductDto createdProduct = productService.createProduct(productDto);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @Validated @RequestBody ProductDto productDto) {
+        try {
+            ProductDto updatedProduct = productService.updateProduct(id, productDto);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(null);
+        }
 
-
+    }
 
 }
