@@ -1,10 +1,10 @@
 package com.example.EzShopProject_EXE2.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 @Getter
@@ -40,5 +40,5 @@ public class ProductDto {
     private ShopDto shop;
 
     @JsonProperty("order_details")
-    private Set<OrderDetailDto> orderDetails = new HashSet<>();
+    private Set<OrderDetailDTO> orderDetails = new HashSet<>();
 }
