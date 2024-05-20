@@ -1,16 +1,25 @@
 package com.example.EzShopProject_EXE2.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.*;
 
+@Data
 @Getter
 @Setter
-public class OrderDetailDto {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class OrderDetailDTO {
     private Long id;
 
+    @Positive(message = "Quantity must be a positive number")
     private int quantity;
 
+    @PositiveOrZero(message = "Price must be a positive number or zero")
     private double price;
 
+    @NotNull(message = "Product ID cannot be null")
     private Long productId;
 }
