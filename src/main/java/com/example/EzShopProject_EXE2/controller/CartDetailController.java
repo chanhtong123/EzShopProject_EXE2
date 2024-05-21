@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/cart_detail")
+@RequestMapping()
 @RequiredArgsConstructor
 @CrossOrigin
 public class CartDetailController {
@@ -22,14 +22,14 @@ public class CartDetailController {
         CartDetail createdCartDetail = iCartDetailService.createCartDetail(cartDetail);
         return ResponseEntity.ok(createdCartDetail);
     }
-    @GetMapping("/{id}")
+    @GetMapping("/login/{id}")
     public ResponseEntity<CartDetail> getCartDetailById(@PathVariable Long id)
     {
         Optional<CartDetail> cartDetail = iCartDetailService.getCartDetailById(id);
         return cartDetail.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping()
+    @GetMapping("/get_all")
     public ResponseEntity<List<CartDetail>> getAllCarts() {
         List<CartDetail> carts = iCartDetailService.getAllCartsDetail();
         return ResponseEntity.ok(carts);

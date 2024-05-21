@@ -3,7 +3,7 @@ package com.example.EzShopProject_EXE2.controller;
 import com.example.EzShopProject_EXE2.dto.OrderDetailDTO;
 import com.example.EzShopProject_EXE2.model.OrderDetail;
 import com.example.EzShopProject_EXE2.service.IOrderDetailService;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

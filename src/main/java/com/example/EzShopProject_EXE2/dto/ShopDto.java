@@ -1,9 +1,9 @@
 package com.example.EzShopProject_EXE2.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
