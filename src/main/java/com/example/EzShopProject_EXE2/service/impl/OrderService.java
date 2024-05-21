@@ -5,7 +5,7 @@ import com.example.EzShopProject_EXE2.dto.OrderDTO;
 import com.example.EzShopProject_EXE2.model.Order;
 import com.example.EzShopProject_EXE2.repository.OrderRepository;
 import com.example.EzShopProject_EXE2.service.IOrderService;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

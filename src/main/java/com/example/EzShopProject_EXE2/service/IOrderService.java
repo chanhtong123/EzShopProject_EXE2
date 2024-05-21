@@ -1,7 +1,7 @@
 package com.example.EzShopProject_EXE2.service;
 
 import com.example.EzShopProject_EXE2.dto.OrderDTO;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import java.util.List;
 

@@ -1,10 +1,10 @@
 package com.example.EzShopProject_EXE2.dto;
 
+import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.validation.constraints.*;
 
 @Data
 @Getter
@@ -31,7 +31,7 @@ public class VoucherDTO {
     private LocalDateTime creatDate;
 
     @NotNull(message = "End date cannot be null")
-    @ FutureOrPresent(message = "End date must be in the present or future")
+    @FutureOrPresent(message = "End date must be in the present or future")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
 }
