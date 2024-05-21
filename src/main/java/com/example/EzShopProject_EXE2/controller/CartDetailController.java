@@ -22,7 +22,7 @@ public class CartDetailController {
         CartDetail createdCartDetail = iCartDetailService.createCartDetail(cartDetail);
         return ResponseEntity.ok(createdCartDetail);
     }
-    @GetMapping("/login/{id}")
+    @GetMapping("/guest/{id}")
     public ResponseEntity<CartDetail> getCartDetailById(@PathVariable Long id)
     {
         Optional<CartDetail> cartDetail = iCartDetailService.getCartDetailById(id);
