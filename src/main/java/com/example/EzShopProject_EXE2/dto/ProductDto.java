@@ -41,4 +41,5 @@ public class ProductDto {
 
     @JsonProperty("order_details")
     private Set<OrderDetailDTO> orderDetails = new HashSet<>();
+    private TitleDto title;
 }
