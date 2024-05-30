@@ -2,13 +2,15 @@ package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.dto.CategoryDto;
 import com.example.EzShopProject_EXE2.dto.ProductDto;
+import com.example.EzShopProject_EXE2.dto.TitleDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.model.Category;
 import com.example.EzShopProject_EXE2.model.Product;
+import com.example.EzShopProject_EXE2.model.Title;
 import com.example.EzShopProject_EXE2.repository.CategoryRepository;
 import com.example.EzShopProject_EXE2.repository.ProductRepository;
+import com.example.EzShopProject_EXE2.repository.TitleRepository;
 import com.example.EzShopProject_EXE2.service.IProductService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,24 +18,28 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final TitleRepository titleRepository;
+
     @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, TitleRepository titleRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.titleRepository = titleRepository;
     }
+
     @Override
     public Product getProductById(long id) throws Exception {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if(optionalProduct.isPresent()){
+        if (optionalProduct.isPresent()) {
             return optionalProduct.get();
         }
         throw new DataNotFoundException("Cannot find product with id =" + id);
     }
 
+    @Override
     public ProductDto createProduct(ProductDto productDto) throws DataNotFoundException {
         Product product = mapToEntity(productDto);
 
@@ -46,9 +52,7 @@ public class ProductService implements IProductService {
         return mapToDto(savedProduct);
     }
 
-
-
-
+    @Override
     public ProductDto updateProduct(Long id, ProductDto productDto) throws Exception {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find product with id: " + id));
@@ -74,6 +78,14 @@ public class ProductService implements IProductService {
         }
         existingProduct.setCategories(categories);
 
+        // Cập nhật title
+        if (productDto.getTitle() != null) {
+            Title existingTitle = titleRepository.findById(productDto.getTitle().getId())
+                    .orElseThrow(() -> new DataNotFoundException(
+                            "Cannot find title with id: " + productDto.getTitle().getId()));
+            existingProduct.setTitle(existingTitle);
+        }
+
         // Lưu sản phẩm đã cập nhật vào cơ sở dữ liệu
         Product updatedProduct = productRepository.save(existingProduct);
         return mapToDto(updatedProduct);
@@ -87,7 +99,7 @@ public class ProductService implements IProductService {
                 .collect(Collectors.toList());
     }
 
-
+    @Override
     public List<ProductDto> searchProducts(String name, Double price, Integer brand) {
         List<Product> products;
 
@@ -121,6 +133,10 @@ public class ProductService implements IProductService {
         productDto.setCategories(product.getCategories().stream()
                 .map(this::mapToCategoryDto)
                 .collect(Collectors.toSet()));
+
+        if (product.getTitle() != null) {
+            productDto.setTitle(mapToTitleDto(product.getTitle()));
+        }
         // Add mappings for shop and orderDetails if necessary
         return productDto;
     }
@@ -150,6 +166,14 @@ public class ProductService implements IProductService {
         }
         product.setCategories(categories);
 
+        // Lấy thông tin về title
+        if (productDto.getTitle() != null) {
+            Title existingTitle = titleRepository.findById(productDto.getTitle().getId())
+                    .orElseThrow(() -> new DataNotFoundException(
+                            "Cannot find title with id: " + productDto.getTitle().getId()));
+            product.setTitle(existingTitle);
+        }
+
         // Add mappings for shop and orderDetails if necessary
         return product;
     }
@@ -165,5 +189,11 @@ public class ProductService implements IProductService {
         categoryDto.setName(category.getName());
         return categoryDto;
     }
-}
 
+    private TitleDto mapToTitleDto(Title title) {
+        TitleDto titleDto = new TitleDto();
+        titleDto.setId(title.getId());
+        titleDto.setName(title.getName());
+        return titleDto;
+    }
+}

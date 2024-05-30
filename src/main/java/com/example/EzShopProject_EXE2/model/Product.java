@@ -38,4 +38,7 @@ public class Product {
     private Shop shop;
     @OneToMany(mappedBy = "product")
     private Set<OrderDetail> orderDetails = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "title_id")
+    private Title title;
 }
