@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/guest/api/products")
+@CrossOrigin
 public class ProductController {
 
     private final IProductService productService;
@@ -24,38 +25,57 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
-        try {
-            Product product = productService.getProductById(id);
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
+//        try {
+//            Product product = productService.getProductById(id);
+//            return new ResponseEntity<>(product, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) throws DataNotFoundException {
         ProductDto createdProduct = productService.createProduct(productDto);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @Validated @RequestBody ProductDto productDto) {
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @Validated @RequestBody ProductDto productDto) {
         try {
             ProductDto updatedProduct = productService.updateProduct(id, productDto);
             return ResponseEntity.ok(updatedProduct);
         } catch (Exception e) {
-            return ResponseEntity.status(404).body(null);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }
-    @PostMapping("/search")
-    public ResponseEntity<List<ProductDto>> searchProducts(@RequestBody ProductDto searchCriteria) {
-        List<ProductDto> products = productService.searchProducts(searchCriteria.getName(), searchCriteria.getPrice(), searchCriteria.getBrand());
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductDto>> searchProductsInPriceRange(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) Integer situation) {
+        List<ProductDto> products = productService.searchProducts(name, minPrice, maxPrice, brand, situation);
         return ResponseEntity.ok(products);
     }
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAllProducts() {
         List<ProductDto> products = productService.getAllProduct();
         return ResponseEntity.ok(products);
+    }
+    @GetMapping("/getByTitle/{titleId}")
+    public ResponseEntity<List<ProductDto>> getProductsByTitleId(@PathVariable Long titleId) {
+        List<ProductDto> products = productService.getProductsByTitleId(titleId);
+        return ResponseEntity.ok(products);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+        ProductDto productDto = productService.getProductById(id);
+        if (productDto != null) {
+            return ResponseEntity.ok(productDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

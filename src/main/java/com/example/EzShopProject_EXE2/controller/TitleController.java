@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/titles")
+@CrossOrigin
 public class TitleController {
     private final ITitleService ititleService;
 

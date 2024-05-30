@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/shops")
+@CrossOrigin
 public class ShopController {
 
     private final IShopService shopService;
