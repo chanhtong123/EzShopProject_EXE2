@@ -17,28 +17,34 @@ import java.util.Set;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+            private Long id;
 
-    private String name;
-    private double price;
-    private String description;
-    private String code;
-    private String status;
-    private int quantity;
-    private int category;
-    private int brand;
-    private int weight;
-    @ManyToMany
-    @JoinTable(name = "product_category",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories = new HashSet<>();
+            private String name;
+            private double price;
+            private String description;
+            private String code;
+            private String status;
+            private int quantity;
+            private int category;
+            private String brand;
+            private int weight;
+            private int situation;
+            private String color;
 
-    @OneToOne(mappedBy = "product")
-    private Shop shop;
-    @OneToMany(mappedBy = "product")
-    private Set<OrderDetail> orderDetails = new HashSet<>();
-    @ManyToOne
-    @JoinColumn(name = "title_id")
-    private Title title;
+                @Column(columnDefinition = "TEXT")
+                private String overview;
+
+            @ManyToMany
+            @JoinTable(name = "product_category",
+                    joinColumns = @JoinColumn(name = "product_id"),
+                    inverseJoinColumns = @JoinColumn(name = "category_id"))
+            private Set<Category> categories = new HashSet<>();
+
+            @OneToOne(mappedBy = "product")
+            private Shop shop;
+            @OneToMany(mappedBy = "product")
+            private Set<OrderDetail> orderDetails = new HashSet<>();
+            @ManyToOne
+            @JoinColumn(name = "title_id")
+            private Title title;
 }
