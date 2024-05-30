@@ -30,14 +30,14 @@ public class ProductService implements IProductService {
         this.titleRepository = titleRepository;
     }
 
-    @Override
-    public Product getProductById(long id) throws Exception {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isPresent()) {
-            return optionalProduct.get();
-        }
-        throw new DataNotFoundException("Cannot find product with id =" + id);
-    }
+//    @Override
+//    public Product getProductById(long id) throws Exception {
+//        Optional<Product> optionalProduct = productRepository.findById(id);
+//        if (optionalProduct.isPresent()) {
+//            return optionalProduct.get();
+//        }
+//        throw new DataNotFoundException("Cannot find product with id =" + id);
+//    }
 
     @Override
     public ProductDto createProduct(ProductDto productDto) throws DataNotFoundException {
@@ -66,6 +66,9 @@ public class ProductService implements IProductService {
         existingProduct.setCategory(productDto.getCategory());
         existingProduct.setBrand(productDto.getBrand());
         existingProduct.setWeight(productDto.getWeight());
+        existingProduct.setSituation((productDto.getSituation()));
+        existingProduct.setOverview(productDto.getOverview());
+        existingProduct.setColor(productDto.getColor());
 
         // Cập nhật categories
         Set<Category> categories = new HashSet<>();
@@ -99,24 +102,81 @@ public class ProductService implements IProductService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
-    public List<ProductDto> searchProducts(String name, Double price, Integer brand) {
+    public List<ProductDto> searchProducts(String name, Double minPrice, Double maxPrice, String brand, Integer situation) {
         List<Product> products;
 
-        if (name != null && price != null && brand != null) {
-            products = productRepository.findByNameContainingAndPriceAndBrand(name, price, brand);
+        if (name != null && brand != null && situation != null) {
+            products = productRepository.findByNameContainingAndBrandAndSituation(name, brand, situation);
+
+
+        } else if (name != null && brand != null) {
+            products = productRepository.findByNameContainingAndBrand(name, brand);
+        } else if (name != null && situation != null) {
+            products = productRepository.findByNameContainingAndSituation(name, situation);
+
+
+        } else if (brand != null && situation != null) {
+            products = productRepository.findByBrandAndSituation(brand, situation);
         } else if (name != null) {
             products = productRepository.findByNameContaining(name);
-        } else if (price != null) {
-            products = productRepository.findByPrice(price);
+
         } else if (brand != null) {
             products = productRepository.findByBrand(brand);
-        } else {
-            products = productRepository.findAll();
+        } else if (situation != null) {
+            products = productRepository.findBySituation(situation);
+
+        }  else if (name != null && minPrice != null && maxPrice != null && brand != null && situation != null) {
+                products = productRepository.findByNameContainingAndPriceBetweenAndBrandAndSituation(name, minPrice, maxPrice, brand, situation);
+            } else if (name != null && minPrice != null && maxPrice != null && situation != null) {
+                products = productRepository.findByNameContainingAndPriceBetweenAndSituation(name, minPrice, maxPrice, situation);
+            } else if (name != null && minPrice != null && maxPrice != null) {
+                products = productRepository.findByNameContainingAndPriceBetween(name, minPrice, maxPrice);
+            } else if (name != null && minPrice != null && brand != null) {
+                products = productRepository.findByNameContainingAndPriceGreaterThanEqualAndBrand(name, minPrice, brand);
+            } else if (name != null && minPrice != null && situation != null) {
+                products = productRepository.findByNameContainingAndPriceGreaterThanEqualAndSituation(name, minPrice, situation);
+            } else if (name != null && minPrice != null) {
+                products = productRepository.findByNameContainingAndPriceGreaterThanEqual(name, minPrice);
+            } else if (name != null && maxPrice != null && brand != null && situation != null) {
+                products = productRepository.findByNameContainingAndPriceLessThanEqualAndBrandAndSituation(name, maxPrice, brand, situation);
+            } else if (name != null && maxPrice != null && brand != null) {
+                products = productRepository.findByNameContainingAndPriceLessThanEqualAndBrand(name, maxPrice, brand);
+            } else if (name != null && maxPrice != null && situation != null) {
+                products = productRepository.findByNameContainingAndPriceLessThanEqualAndSituation(name, maxPrice, situation);
+            } else if (name != null && maxPrice != null) {
+                products = productRepository.findByNameContainingAndPriceLessThanEqual(name, maxPrice);
+            } else if (minPrice != null && maxPrice != null && brand != null && situation != null) {
+                products = productRepository.findByPriceBetweenAndBrandAndSituation(minPrice, maxPrice, brand, situation);
+            } else if (minPrice != null && maxPrice != null && brand != null) {
+                products = productRepository.findByPriceBetweenAndBrand(minPrice, maxPrice, brand);
+            } else if (minPrice != null && maxPrice != null && situation != null) {
+                products = productRepository.findByPriceBetweenAndSituation(minPrice, maxPrice, situation);
+            } else if (minPrice != null && maxPrice != null) {
+                products = productRepository.findByPriceBetween(minPrice, maxPrice);
+            } else {
+                products = productRepository.findAll();
+            }
+
+            return products.stream().map(this::mapToDto).collect(Collectors.toList());
         }
 
+
+    public List<ProductDto> getProductsByTitleId(Long titleId) {
+        List<Product> products = productRepository.findByTitleId(titleId);
         return products.stream().map(this::mapToDto).collect(Collectors.toList());
     }
+    public ProductDto getProductById(Long id) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (productOptional.isPresent()) {
+            return mapToDto(productOptional.get());
+        } else {
+            // Xử lý khi không tìm thấy sản phẩm (ví dụ: ném ngoại lệ)
+            return null;
+        }
+    }
+
 
     private ProductDto mapToDto(Product product) {
         ProductDto productDto = new ProductDto();
@@ -130,6 +190,9 @@ public class ProductService implements IProductService {
         productDto.setCategory(product.getCategory());
         productDto.setBrand(product.getBrand());
         productDto.setWeight(product.getWeight());
+        productDto.setSituation(product.getSituation());
+        productDto.setOverview(product.getOverview());
+        productDto.setColor(product.getColor());
         productDto.setCategories(product.getCategories().stream()
                 .map(this::mapToCategoryDto)
                 .collect(Collectors.toSet()));
@@ -152,6 +215,9 @@ public class ProductService implements IProductService {
                 .category(productDto.getCategory())
                 .brand(productDto.getBrand())
                 .weight(productDto.getWeight())
+                .situation(productDto.getSituation())
+                .overview(productDto.getOverview())
+                .color(productDto.getColor())
                 .build();
 
         // Lấy thông tin về category

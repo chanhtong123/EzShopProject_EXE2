@@ -5,12 +5,14 @@ import com.example.EzShopProject_EXE2.response.AuthenticationResponse;
 import com.example.EzShopProject_EXE2.service.impl.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
