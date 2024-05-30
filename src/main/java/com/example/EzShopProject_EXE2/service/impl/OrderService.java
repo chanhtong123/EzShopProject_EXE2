@@ -1,7 +1,7 @@
 package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.converter.OrderConverter;
-import com.example.EzShopProject_EXE2.dto.OrderDTO;
+import com.example.EzShopProject_EXE2.dto.OrderDto;
 import com.example.EzShopProject_EXE2.model.Order;
 import com.example.EzShopProject_EXE2.repository.OrderRepository;
 import com.example.EzShopProject_EXE2.service.IOrderService;
@@ -21,7 +21,7 @@ public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
 
     @Override
-    public List<OrderDTO> findAll() {
+    public List<OrderDto> findAll() {
         try {
             List<Order> orders = orderRepository.findAll();
             return OrderConverter.toDto(orders);
@@ -33,7 +33,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderDTO findById(long id) {
+    public OrderDto findById(long id) {
         try {
             Optional<Order> order = orderRepository.findById(id);
             return order.map(OrderConverter::toDto).orElse(null);
@@ -44,7 +44,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderDTO save(OrderDTO orderDTO) {
+    public OrderDto save(OrderDto orderDTO) {
         try {
             Order order = OrderConverter.toEntity(orderDTO);
             Order savedOrder = orderRepository.save(order);
@@ -67,7 +67,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderDTO update(long id, @Valid OrderDTO orderDTO) {
+    public OrderDto update(long id, @Valid OrderDto orderDTO) {
         try {
             Optional<Order> existingOrderOpt = orderRepository.findById(id);
             if (existingOrderOpt.isPresent()) {

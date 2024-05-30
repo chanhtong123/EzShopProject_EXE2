@@ -1,6 +1,6 @@
 package com.example.EzShopProject_EXE2.controller;
 
-import com.example.EzShopProject_EXE2.dto.OrderDTO;
+import com.example.EzShopProject_EXE2.dto.OrderDto;
 import com.example.EzShopProject_EXE2.service.IOrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ public class OrderController {
     private IOrderService orderService;
 
     @GetMapping("/id")
-    public ResponseEntity<OrderDTO> getOrderById(@RequestParam("id") long id) {
+    public ResponseEntity<OrderDto> getOrderById(@RequestParam("id") long id) {
         try {
-            OrderDTO orderDTO = orderService.findById(id);
+            OrderDto orderDTO = orderService.findById(id);
             return new ResponseEntity<>(orderDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -27,9 +27,9 @@ public class OrderController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto orderDTO) {
        try {
-           OrderDTO order = orderService.save(orderDTO);
+           OrderDto order = orderService.save(orderDTO);
            return new ResponseEntity<>(order, HttpStatus.CREATED);
        }catch (Exception e) {
            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -37,9 +37,9 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable long id, @Valid @RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<OrderDto> updateOrder(@PathVariable long id, @Valid @RequestBody OrderDto orderDTO) {
         try {
-            OrderDTO updatedOrder = orderService.update(id, orderDTO);
+            OrderDto updatedOrder = orderService.update(id, orderDTO);
             return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -48,7 +48,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/id")
-    public ResponseEntity<OrderDTO> deleteOrder(@RequestParam("id") long id) {
+    public ResponseEntity<OrderDto> deleteOrder(@RequestParam("id") long id) {
         try {
             orderService.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -57,9 +57,9 @@ public class OrderController {
         }
     }
     @GetMapping("/all")
-    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+    public ResponseEntity<List<OrderDto>> getAllOrders() {
         try {
-            List<OrderDTO> orders = orderService.findAll();
+            List<OrderDto> orders = orderService.findAll();
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -1,18 +1,18 @@
 package com.example.EzShopProject_EXE2.service;
 
-import com.example.EzShopProject_EXE2.dto.OrderDTO;
+import com.example.EzShopProject_EXE2.dto.OrderDto;
 import jakarta.validation.Valid;
 
 import java.util.List;
 
 public interface IOrderService {
-    List<OrderDTO> findAll();
+    List<OrderDto> findAll();
 
-    OrderDTO findById(long id);
+    OrderDto findById(long id);
 
-    OrderDTO save(OrderDTO orderDTO);
+    OrderDto save(OrderDto orderDTO);
 
     void delete(long id);
 
-    OrderDTO update(long id, @Valid OrderDTO orderDTO);
+    OrderDto update(long id, @Valid OrderDto orderDTO);
 }

@@ -13,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDetailDTO {
+public class OrderDetailDto {
     private Long id;
 
     @Positive(message = "Quantity must be a positive number")

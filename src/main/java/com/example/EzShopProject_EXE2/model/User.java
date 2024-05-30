@@ -29,7 +29,7 @@ public class User implements UserDetails {
     @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = true)
     private String lastName;
 
     @Column(name = "username")
@@ -38,20 +38,23 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String passWord;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = true)
     private String email;
 
-    @Column(name = "phone", unique = true, nullable = false)
+    @Column(name = "phone", unique = true, nullable = true)
     private String phone;
+
+    @Column(name = "image", unique = true, nullable = true)
+    private String image;
 
     @Column(name = "dob", nullable = true)
     private LocalDateTime dob;
 
-    @Column(name = "gender", nullable = false)
+    @Column(name = "gender", nullable = true)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(name = "status", nullable = false, columnDefinition = "boolean default true")
+    @Column(name = "status", nullable = true, columnDefinition = "boolean default true")
     private boolean status;
 
     @Column(name = "created_by", nullable = true)

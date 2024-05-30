@@ -1,18 +1,18 @@
 package com.example.EzShopProject_EXE2.service;
 
-import com.example.EzShopProject_EXE2.dto.VoucherDTO;
+import com.example.EzShopProject_EXE2.dto.VoucherDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 
 import java.util.List;
 
 public interface IVoucherService {
-    VoucherDTO createVoucher(VoucherDTO voucherDTO);
+    VoucherDto createVoucher(VoucherDto voucherDTO);
 
-    VoucherDTO findVoucherById(long id);
+    VoucherDto findVoucherById(long id);
 
-    List<VoucherDTO> findAllVouchers();
+    List<VoucherDto> findAllVouchers();
 
     void deleteVoucher(long id);
 
-    VoucherDTO updateVoucher(VoucherDTO voucherDTO) throws DataNotFoundException;
+    VoucherDto updateVoucher(VoucherDto voucherDTO) throws DataNotFoundException;
 }

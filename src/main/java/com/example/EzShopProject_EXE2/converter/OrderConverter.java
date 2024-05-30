@@ -1,6 +1,6 @@
 package com.example.EzShopProject_EXE2.converter;
 
-import com.example.EzShopProject_EXE2.dto.OrderDTO;
+import com.example.EzShopProject_EXE2.dto.OrderDto;
 import com.example.EzShopProject_EXE2.model.Order;
 import org.springframework.stereotype.Component;
 
@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class OrderConverter {
-    public static OrderDTO toDto(Order order) {
-        return OrderDTO.builder()
+    public static OrderDto toDto(Order order) {
+        return OrderDto.builder()
                 .id(order.getId())
                 .orderDate(order.getOrderDate())
                 .userId(order.getUserId())
@@ -18,7 +18,7 @@ public class OrderConverter {
             .build();
 
     }
-    public static Order toEntity(OrderDTO orderDto) {
+    public static Order toEntity(OrderDto orderDto) {
         return Order.builder()
                 .id(orderDto.getId())
                 .orderDate(orderDto.getOrderDate())
@@ -27,7 +27,7 @@ public class OrderConverter {
                 .build();
     }
 
-    public static List<OrderDTO> toDto(List<Order> orders) {
+    public static List<OrderDto> toDto(List<Order> orders) {
         return orders.stream()
                 .map(OrderConverter::toDto)
                 .collect(Collectors.toList());
