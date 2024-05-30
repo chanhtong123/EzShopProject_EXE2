@@ -1,6 +1,6 @@
 package com.example.EzShopProject_EXE2.controller;
 
-import com.example.EzShopProject_EXE2.dto.VoucherDTO;
+import com.example.EzShopProject_EXE2.dto.VoucherDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.service.IVoucherService;
 import jakarta.validation.Valid;
@@ -19,9 +19,9 @@ public class VoucherController {
     private IVoucherService voucherService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<VoucherDTO> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<VoucherDto> findById(@PathVariable("id") Long id) {
         try {
-            VoucherDTO voucherDTO = voucherService.findVoucherById(id);
+            VoucherDto voucherDTO = voucherService.findVoucherById(id);
             if (voucherDTO == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -32,9 +32,9 @@ public class VoucherController {
     }
 
     @PostMapping
-    public ResponseEntity<VoucherDTO> createVoucher(@Valid @RequestBody VoucherDTO voucherDTO) {
+    public ResponseEntity<VoucherDto> createVoucher(@Valid @RequestBody VoucherDto voucherDTO) {
         try {
-            VoucherDTO createdVoucher = voucherService.createVoucher(voucherDTO);
+            VoucherDto createdVoucher = voucherService.createVoucher(voucherDTO);
             return new ResponseEntity<>(createdVoucher, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -42,9 +42,9 @@ public class VoucherController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<VoucherDTO> updateVoucher(@Valid @RequestBody VoucherDTO voucherDTO) {
+    public ResponseEntity<VoucherDto> updateVoucher(@Valid @RequestBody VoucherDto voucherDTO) {
         try {
-            VoucherDTO updatedVoucher = voucherService.updateVoucher(voucherDTO);
+            VoucherDto updatedVoucher = voucherService.updateVoucher(voucherDTO);
             return new ResponseEntity<>(updatedVoucher, HttpStatus.OK);
         } catch (DataNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -64,9 +64,9 @@ public class VoucherController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<VoucherDTO>> findAll() {
+    public ResponseEntity<List<VoucherDto>> findAll() {
         try {
-            List<VoucherDTO> voucherDTOS = voucherService.findAllVouchers();
+            List<VoucherDto> voucherDTOS = voucherService.findAllVouchers();
             return new ResponseEntity<>(voucherDTOS, HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

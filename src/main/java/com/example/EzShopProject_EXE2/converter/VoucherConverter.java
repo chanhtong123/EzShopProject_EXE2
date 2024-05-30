@@ -1,6 +1,6 @@
 package com.example.EzShopProject_EXE2.converter;
 
-import com.example.EzShopProject_EXE2.dto.VoucherDTO;
+import com.example.EzShopProject_EXE2.dto.VoucherDto;
 import com.example.EzShopProject_EXE2.model.Voucher;
 import org.springframework.stereotype.Component;
 
@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class VoucherConverter {
-    public static VoucherDTO toDto(Voucher voucher) {
-        return VoucherDTO.builder()
+    public static VoucherDto toDto(Voucher voucher) {
+        return VoucherDto.builder()
                 .id(voucher.getId())
                 .name(voucher.getName())
                 .code(voucher.getCode())
@@ -19,7 +19,7 @@ public class VoucherConverter {
                 .endDate(voucher.getEndDate())
                 .build();
     }
-    public static Voucher toEntity(VoucherDTO dto) {
+    public static Voucher toEntity(VoucherDto dto) {
         return Voucher.builder()
                 .id(dto.getId())
                 .name(dto.getName())
@@ -30,7 +30,7 @@ public class VoucherConverter {
                 .build();
     }
 
-    public static List<VoucherDTO> toDto(List<Voucher> vouchers) {
+    public static List<VoucherDto> toDto(List<Voucher> vouchers) {
         return vouchers.stream()
                 .map(VoucherConverter::toDto)
                 .collect(Collectors.toList());

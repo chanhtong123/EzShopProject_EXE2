@@ -1,18 +1,18 @@
 package com.example.EzShopProject_EXE2.service;
 
-import com.example.EzShopProject_EXE2.dto.OrderDetailDTO;
+import com.example.EzShopProject_EXE2.dto.OrderDetailDto;
 import com.example.EzShopProject_EXE2.model.OrderDetail;
 
 import java.util.List;
 
 public interface IOrderDetailService {
-    OrderDetailDTO findById(long id);
+    OrderDetailDto findById(long id);
 
-    List<OrderDetailDTO> findAll();
+    List<OrderDetailDto> findAll();
 
-    OrderDetailDTO create(OrderDetail orderDetail);
+    OrderDetailDto create(OrderDetail orderDetail);
 
-    OrderDetailDTO update(long id, OrderDetail orderDetail);
+    OrderDetailDto update(long id, OrderDetail orderDetail);
 
     void delete(long id);
 }

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VoucherDTO {
+public class VoucherDto {
     private Long id;
 
     @NotBlank(message = "Voucher code cannot be blank")

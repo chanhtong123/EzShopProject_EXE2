@@ -8,10 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartDTO {
+public class CartDetailDto {
     private Long id;
-    private Long orderId;
-    private Long userId;
-    private CartDetailDTO cartDetail;
-
+    private Long productId;
+    private int quantity;
 }

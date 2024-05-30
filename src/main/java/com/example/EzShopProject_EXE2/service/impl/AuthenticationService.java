@@ -52,4 +52,9 @@ public class AuthenticationService {
 
         return new AuthenticationResponse(token);
     }
+
+    public User getByUser(String token) {
+        String username = jwtService.extractUserName(token);
+        return repository.findByUserName(username).orElseThrow();
+    }
 }

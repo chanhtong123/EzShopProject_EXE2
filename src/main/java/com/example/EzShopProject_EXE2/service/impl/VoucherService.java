@@ -1,7 +1,7 @@
 package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.converter.VoucherConverter;
-import com.example.EzShopProject_EXE2.dto.VoucherDTO;
+import com.example.EzShopProject_EXE2.dto.VoucherDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.model.Voucher;
 import com.example.EzShopProject_EXE2.repository.VoucherRepository;
@@ -21,7 +21,7 @@ public class VoucherService implements IVoucherService {
     private final VoucherRepository voucherRepository;
 
     @Override
-    public VoucherDTO createVoucher(VoucherDTO voucherDTO) {
+    public VoucherDto createVoucher(VoucherDto voucherDTO) {
         try {
             Voucher voucher = VoucherConverter.toEntity(voucherDTO);
             Voucher savedVoucher = voucherRepository.save(voucher);
@@ -33,7 +33,7 @@ public class VoucherService implements IVoucherService {
     }
 
     @Override
-    public VoucherDTO findVoucherById(long id) {
+    public VoucherDto findVoucherById(long id) {
         try {
             Voucher voucher = voucherRepository.findById(id).orElse(null);
             return VoucherConverter.toDto(voucher);
@@ -44,7 +44,7 @@ public class VoucherService implements IVoucherService {
     }
 
     @Override
-    public List<VoucherDTO> findAllVouchers() {
+    public List<VoucherDto> findAllVouchers() {
         try {
             List<Voucher> vouchers = voucherRepository.findAll();
             return VoucherConverter.toDto(vouchers);
@@ -65,7 +65,7 @@ public class VoucherService implements IVoucherService {
     }
 
     @Override
-    public VoucherDTO updateVoucher(VoucherDTO voucherDTO) throws DataNotFoundException {
+    public VoucherDto updateVoucher(VoucherDto voucherDTO) throws DataNotFoundException {
         try {
             Optional<Voucher> existingVoucherOpt = voucherRepository.findById(voucherDTO.getId());
             if (existingVoucherOpt.isPresent()) {

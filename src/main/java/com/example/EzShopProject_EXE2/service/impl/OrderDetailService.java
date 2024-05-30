@@ -1,7 +1,7 @@
 package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.converter.OrderDetailConverter;
-import com.example.EzShopProject_EXE2.dto.OrderDetailDTO;
+import com.example.EzShopProject_EXE2.dto.OrderDetailDto;
 import com.example.EzShopProject_EXE2.model.OrderDetail;
 import com.example.EzShopProject_EXE2.repository.OrderDetailRepository;
 import com.example.EzShopProject_EXE2.service.IOrderDetailService;
@@ -21,7 +21,7 @@ public class OrderDetailService implements IOrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
 
     @Override
-    public OrderDetailDTO findById(long id) {
+    public OrderDetailDto findById(long id) {
         try {
             Optional<OrderDetail> orderDetail = orderDetailRepository.findById(id);
             return orderDetail.map(OrderDetailConverter::toDto).orElse(null);
@@ -32,7 +32,7 @@ public class OrderDetailService implements IOrderDetailService {
     }
 
     @Override
-    public List<OrderDetailDTO> findAll() {
+    public List<OrderDetailDto> findAll() {
         try {
             List<OrderDetail> orderDetails = orderDetailRepository.findAll();
             return OrderDetailConverter.toDto(orderDetails);
@@ -43,7 +43,7 @@ public class OrderDetailService implements IOrderDetailService {
     }
 
     @Override
-    public OrderDetailDTO create(OrderDetail orderDetail) {
+    public OrderDetailDto create(OrderDetail orderDetail) {
         try {
             OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
             return OrderDetailConverter.toDto(savedOrderDetail);
@@ -54,7 +54,7 @@ public class OrderDetailService implements IOrderDetailService {
     }
 
     @Override
-    public OrderDetailDTO update(long id, OrderDetail orderDetail) {
+    public OrderDetailDto update(long id, OrderDetail orderDetail) {
         try {
             Optional<OrderDetail> orderDetailOptional = orderDetailRepository.findById(id);
             if (orderDetailOptional.isPresent()) {

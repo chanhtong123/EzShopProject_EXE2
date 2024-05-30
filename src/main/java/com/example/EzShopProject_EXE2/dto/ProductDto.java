@@ -40,6 +40,5 @@ public class ProductDto {
     private ShopDto shop;
 
     @JsonProperty("order_details")
-    private Set<OrderDetailDTO> orderDetails = new HashSet<>();
-    private TitleDto title;
+    private Set<OrderDetailDto> orderDetails = new HashSet<>();
 }
