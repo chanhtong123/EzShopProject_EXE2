@@ -15,7 +15,7 @@ public class ProductDto {
     @NotBlank
     @JsonProperty("product_name")
     private String name;
-
+    private String image;
     @NotBlank
     private double price;
 
@@ -35,12 +35,15 @@ public class ProductDto {
     private int situation;
     private String overview;
     private String color;
+    private String detail;
+    private String size;
+
 
     @JsonProperty("categories")
     private Set<CategoryDto> categories = new HashSet<>();
 
     @JsonProperty("shop")
-    private ShopDto shop;
+    private ShopDto shopId;
 
     @JsonProperty("order_details")
     private Set<OrderDetailDto> orderDetails = new HashSet<>();
