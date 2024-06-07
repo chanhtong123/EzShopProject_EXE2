@@ -2,13 +2,16 @@ package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.dto.CategoryDto;
 import com.example.EzShopProject_EXE2.dto.ProductDto;
+import com.example.EzShopProject_EXE2.dto.ShopDto;
 import com.example.EzShopProject_EXE2.dto.TitleDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.model.Category;
 import com.example.EzShopProject_EXE2.model.Product;
+import com.example.EzShopProject_EXE2.model.Shop;
 import com.example.EzShopProject_EXE2.model.Title;
 import com.example.EzShopProject_EXE2.repository.CategoryRepository;
 import com.example.EzShopProject_EXE2.repository.ProductRepository;
+import com.example.EzShopProject_EXE2.repository.ShopRepository;
 import com.example.EzShopProject_EXE2.repository.TitleRepository;
 import com.example.EzShopProject_EXE2.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +25,14 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final TitleRepository titleRepository;
+    private final ShopRepository shopRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, TitleRepository titleRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, TitleRepository titleRepository, ShopRepository shopRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.titleRepository = titleRepository;
+        this.shopRepository = shopRepository;
     }
 
 //    @Override
@@ -69,6 +74,7 @@ public class ProductService implements IProductService {
         existingProduct.setSituation((productDto.getSituation()));
         existingProduct.setOverview(productDto.getOverview());
         existingProduct.setColor(productDto.getColor());
+        existingProduct.setDetail(productDto.getDetail());
 
         // Cập nhật categories
         Set<Category> categories = new HashSet<>();
@@ -183,6 +189,8 @@ public class ProductService implements IProductService {
     }
 
 
+
+
     private ProductDto mapToDto(Product product) {
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
@@ -198,6 +206,8 @@ public class ProductService implements IProductService {
         productDto.setSituation(product.getSituation());
         productDto.setOverview(product.getOverview());
         productDto.setColor(product.getColor());
+        productDto.setDetail(product.getDetail());
+        productDto.setSize(product.getSize());
         productDto.setCategories(product.getCategories().stream()
                 .map(this::mapToCategoryDto)
                 .collect(Collectors.toSet()));
@@ -223,6 +233,8 @@ public class ProductService implements IProductService {
                 .situation(productDto.getSituation())
                 .overview(productDto.getOverview())
                 .color(productDto.getColor())
+                .detail(productDto.getDetail())
+                .size(productDto.getSize())
                 .build();
 
         // Lấy thông tin về category
@@ -243,6 +255,13 @@ public class ProductService implements IProductService {
                     .orElseThrow(() -> new DataNotFoundException(
                             "Cannot find title with id: " + productDto.getTitle().getId()));
             product.setTitle(existingTitle);
+        }
+        // Lấy thông tin về cửa hàng
+        if (productDto.getShopId() != null) {
+            Shop existingShop = shopRepository.findById(productDto.getShopId().getShopId())
+                    .orElseThrow(() -> new DataNotFoundException(
+                            "Cannot find shop with id: " + productDto.getShopId().getShopId()));
+            product.setShop(existingShop);
         }
 
         // Add mappings for shop and orderDetails if necessary
