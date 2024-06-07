@@ -1,18 +1,15 @@
 package com.example.EzShopProject_EXE2.service;
 
+import com.example.EzShopProject_EXE2.model.CartDetail;
 import com.example.EzShopProject_EXE2.model.Shop;
 import com.example.EzShopProject_EXE2.request.shop.ShopSearchRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IShopService {
-    Shop getShopById(long id) throws Exception;
+    Optional<Shop> getShopById(Long id);
 
-    Shop getShopByOwnerId(long id);
+    List<Shop> getAllShop();
 
-    void createNewShop(Shop shop) throws Exception;
-
-    void updateShop(Shop shop) throws Exception;
-
-    List<Shop> getShop(ShopSearchRequest request);
 }

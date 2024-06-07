@@ -9,9 +9,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ShopRepository extends JpaRepository<Shop,Long> {
-    @Query("SELECT s FROM Shop s WHERE s.owner =: id")
-    Optional<Shop> getShopByOwnerId(long id);
 
-    @Query("select s FROM Shop s WHERE  LOWER(s.name) LIKE %:name%")
-    List<Shop> getShop(String name);
 }

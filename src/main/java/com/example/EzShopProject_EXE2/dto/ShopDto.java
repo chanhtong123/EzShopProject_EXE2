@@ -15,14 +15,16 @@ public class ShopDto {
 
     @NotBlank
     private String address;
+    private String image;
+    private String backgroundImage;
 
     @NotBlank
     private String phoneNumber;
 
     private double wallet;
 
-    private int status;
+    private boolean status;
 
-    private Long owner;
+    private String owner;
 }
 

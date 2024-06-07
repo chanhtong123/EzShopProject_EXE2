@@ -177,6 +177,11 @@ public class ProductService implements IProductService {
         }
     }
 
+    @Override
+    public List<Product> getAllProductsByShopId(Long shopId) {
+        return productRepository.findByShopId(shopId);
+    }
+
 
     private ProductDto mapToDto(Product product) {
         ProductDto productDto = new ProductDto();

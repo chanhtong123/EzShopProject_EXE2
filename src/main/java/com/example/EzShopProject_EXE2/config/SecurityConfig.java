@@ -29,7 +29,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/login/**","/register/**", "/guest/**","/")  //khong can token van vao url duoc
+                        req->req.requestMatchers("/login/**","/register/**", "/guest/**","/public/**")  //khong can token van vao url duoc
                                 .permitAll()
                                 .requestMatchers("/admin/**").hasAnyAuthority("ADMIN") //role ADMIN
                                 .anyRequest()

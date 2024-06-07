@@ -2,7 +2,9 @@ package com.example.EzShopProject_EXE2.controller;
 
 import com.example.EzShopProject_EXE2.dto.ProductDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
+
 import com.example.EzShopProject_EXE2.model.Product;
+import com.example.EzShopProject_EXE2.response.ProductResponse;
 import com.example.EzShopProject_EXE2.service.IProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,6 +22,7 @@ import java.util.List;
 public class ProductController {
 
     private final IProductService productService;
+
 
     @Autowired
     public ProductController(IProductService productService) {
@@ -77,5 +81,32 @@ public class ProductController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+
+    @GetMapping("/products/shop/{shopId}")
+    public ResponseEntity<List<ProductResponse>> getProductsByShopId(@PathVariable Long shopId) {
+        List<Product> products = productService.getAllProductsByShopId(shopId);
+        List<ProductResponse> responseList = new ArrayList<>();
+        for (Product product : products){
+            responseList.add(ProductResponse.builder()
+                            .id(product.getId())
+                            .name(product.getName())
+                            .price(product.getPrice())
+                            .description(product.getDescription())
+                            .code(product.getDescription())
+                            .status(product.getStatus())
+                            .quantity(product.getQuantity())
+                            .category(product.getCategory())
+                            .brand(product.getBrand())
+                            .weight(product.getWeight())
+                            .situation(product.getSituation())
+                            .color(product.getColor())
+                            .overview(product.getOverview())
+                            .image(product.getImage())
+                    .build());
+        }
+
+        return ResponseEntity.ok(responseList);
     }
 }
