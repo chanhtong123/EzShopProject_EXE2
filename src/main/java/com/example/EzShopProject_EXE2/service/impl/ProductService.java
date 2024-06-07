@@ -64,6 +64,7 @@ public class ProductService implements IProductService {
 
         // Cập nhật thông tin sản phẩm từ DTO
         existingProduct.setName(productDto.getName());
+        existingProduct.setImage(productDto.getImage());
         existingProduct.setPrice(productDto.getPrice());
         existingProduct.setDescription(productDto.getDescription());
         existingProduct.setStatus(productDto.getStatus());
@@ -190,6 +191,7 @@ public class ProductService implements IProductService {
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
         productDto.setName(product.getName());
+        productDto.setImage(product.getImage());
         productDto.setPrice(product.getPrice());
         productDto.setDescription(product.getDescription());
         productDto.setCode(product.getCode());
@@ -217,6 +219,7 @@ public class ProductService implements IProductService {
     private Product mapToEntity(ProductDto productDto) throws DataNotFoundException {
         Product product = Product.builder()
                 .name(productDto.getName())
+                .image(productDto.getImage())
                 .price(productDto.getPrice())
                 .description(productDto.getDescription())
                 .code(productDto.getCode())
