@@ -2,11 +2,15 @@ package com.example.EzShopProject_EXE2.repository;
 
 import com.example.EzShopProject_EXE2.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
+    List<Product> findByShopId(Long shopId);
     List<Product> findByTitleId(Long titleId);
     List<Product> findByNameContainingAndPriceAndBrand(String name, Double price, String brand);
     List<Product> findByNameContaining(String name);
@@ -39,6 +43,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findByPriceBetweenAndBrand(Double minPrice, Double maxPrice, String brand);
     List<Product> findByPriceBetweenAndSituation(Double minPrice, Double maxPrice, Integer situation);
     List<Product> findByPriceBetween(Double minPrice, Double maxPrice);
+
 
 
 }
