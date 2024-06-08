@@ -10,24 +10,25 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/cart_item")
 @RequiredArgsConstructor
 @CrossOrigin
 public class CartDetailController {
     private final ICartDetailService iCartDetailService;
 
 
+    @GetMapping("/{cartId}")
+    public ResponseEntity<List<CartDetail>> getCartDetailsByCartId(@PathVariable Long cartId) {
+        List<CartDetail> cartDetails = iCartDetailService.getCartDetailsByCartId(cartId);
+        return ResponseEntity.ok(cartDetails);
+    }
+
     @PostMapping()
     public ResponseEntity<CartDetail> createCartDetail(@RequestBody CartDetail cartDetail) {
         CartDetail createdCartDetail = iCartDetailService.createCartDetail(cartDetail);
         return ResponseEntity.ok(createdCartDetail);
     }
-    @GetMapping("/guest/{id}")
-    public ResponseEntity<CartDetail> getCartDetailById(@PathVariable Long id)
-    {
-        Optional<CartDetail> cartDetail = iCartDetailService.getCartDetailById(id);
-        return cartDetail.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+
 
     @GetMapping("/get_all")
     public ResponseEntity<List<CartDetail>> getAllCarts() {

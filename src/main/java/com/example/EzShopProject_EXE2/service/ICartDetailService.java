@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface ICartDetailService {
     CartDetail createCartDetail(CartDetail cartDetail);
+    List<CartDetail> getCartDetailsByCartId(Long cartId);
 
     Optional<CartDetail> getCartDetailById(Long id);
     List<CartDetail> getAllCartsDetail();

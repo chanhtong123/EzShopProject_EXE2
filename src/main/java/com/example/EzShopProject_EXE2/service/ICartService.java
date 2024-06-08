@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ICartService {
-    Cart createCart(Cart cart);
-    Optional<Cart> getCartById(Long id);
-    List<Cart> getAllCarts();
-    Cart updateCart(Long id, Cart cart);
-    void deleteCart(Long id);
+     Cart getCartByUserId(Long userId);
+    Cart getCartByToken(String token);
 }
