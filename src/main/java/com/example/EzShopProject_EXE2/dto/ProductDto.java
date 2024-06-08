@@ -1,14 +1,18 @@
 package com.example.EzShopProject_EXE2.dto;
 
+import com.example.EzShopProject_EXE2.model.Shop;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
+@Data
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ProductDto {
     private Long id;
 
@@ -28,7 +32,6 @@ public class ProductDto {
     private String status;
 
     private int quantity;
-    private int category;
     private String brand;
     private int weight;
     private int situation;
@@ -37,12 +40,10 @@ public class ProductDto {
     private String detail;
     private String size;
 
-
     @JsonProperty("categories")
     private Set<CategoryDto> categories = new HashSet<>();
 
-    @JsonProperty("shop")
-    private ShopDto shopId;
+    private Shop shop;
 
     @JsonProperty("order_details")
     private Set<OrderDetailDto> orderDetails = new HashSet<>();

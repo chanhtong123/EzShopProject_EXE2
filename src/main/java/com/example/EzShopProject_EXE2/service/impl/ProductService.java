@@ -255,12 +255,6 @@ public class ProductService implements IProductService {
             product.setTitle(existingTitle);
         }
         // Lấy thông tin về cửa hàng
-        if (productDto.getShopId() != null) {
-            Shop existingShop = shopRepository.findById(productDto.getShopId().getShopId())
-                    .orElseThrow(() -> new DataNotFoundException(
-                            "Cannot find shop with id: " + productDto.getShopId().getShopId()));
-            product.setShop(existingShop);
-        }
 
         // Add mappings for shop and orderDetails if necessary
         return product;

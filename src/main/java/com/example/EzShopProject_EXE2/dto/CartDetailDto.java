@@ -1,6 +1,10 @@
 package com.example.EzShopProject_EXE2.dto;
 
+import com.example.EzShopProject_EXE2.model.Cart;
+import com.example.EzShopProject_EXE2.model.Shop;
 import lombok.*;
+
+import java.util.Date;
 
 @Data
 @Getter
@@ -10,6 +14,9 @@ import lombok.*;
 @Builder
 public class CartDetailDto {
     private Long id;
-    private Long productId;
-    private int quantity;
+    private double price;
+    private Date createdAt;
+    private Cart cart;
+    private Shop shop;
+    private ProductDto product;
 }

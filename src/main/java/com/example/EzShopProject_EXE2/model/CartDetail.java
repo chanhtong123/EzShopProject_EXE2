@@ -18,15 +18,16 @@ public class CartDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long productId; 
-
-    private int quantity;
 
     private double price;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private Date createdAt = new Date();
+
+
+
+
 
     @ManyToOne
     @JoinColumn(name = "cart_id", nullable = false)
@@ -36,5 +37,9 @@ public class CartDetail {
     @ManyToOne
     @JoinColumn(name = "shop_id", nullable = false)
     private Shop shop;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
 }

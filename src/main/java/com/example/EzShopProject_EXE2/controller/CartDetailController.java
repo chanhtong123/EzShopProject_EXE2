@@ -1,5 +1,6 @@
 package com.example.EzShopProject_EXE2.controller;
 
+import com.example.EzShopProject_EXE2.dto.CartDetailDto;
 import com.example.EzShopProject_EXE2.model.CartDetail;
 import com.example.EzShopProject_EXE2.service.ICartDetailService;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +18,15 @@ public class CartDetailController {
     private final ICartDetailService iCartDetailService;
 
 
+//    @GetMapping("/{cartId}")
+//    public ResponseEntity<List<CartDetail>> getCartDetailsByCartId(@PathVariable Long cartId) {
+//        List<CartDetail> cartDetails = iCartDetailService.getCartDetailsByCartId(cartId);
+//        return ResponseEntity.ok(cartDetails);
+//    }
+
     @GetMapping("/{cartId}")
-    public ResponseEntity<List<CartDetail>> getCartDetailsByCartId(@PathVariable Long cartId) {
-        List<CartDetail> cartDetails = iCartDetailService.getCartDetailsByCartId(cartId);
+    public ResponseEntity<List<CartDetailDto>> getCartDetailsByCartId(@PathVariable Long cartId) {
+        List<CartDetailDto> cartDetails = iCartDetailService.getCartDetailsByCartId(cartId);
         return ResponseEntity.ok(cartDetails);
     }
 
@@ -36,15 +43,7 @@ public class CartDetailController {
         return ResponseEntity.ok(carts);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<CartDetail> updateCart(@PathVariable Long id, @RequestBody CartDetail cartDetail) {
-        CartDetail updatedCart = iCartDetailService.updateCartDetail(id, cartDetail);
-        if (updatedCart != null) {
-            return ResponseEntity.ok(updatedCart);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCart(@PathVariable Long id) {
