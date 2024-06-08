@@ -12,8 +12,7 @@ import java.util.Set;
 public class ProductDto {
     private Long id;
 
-    @NotBlank
-    @JsonProperty("product_name")
+
     private String name;
     private String image;
     @NotBlank

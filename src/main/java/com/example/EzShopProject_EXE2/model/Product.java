@@ -3,6 +3,7 @@ package com.example.EzShopProject_EXE2.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +26,6 @@ public class Product {
         private String code;
         private String status;
         private int quantity;
-        private int category;
         private String brand;
         private int weight;
         private int situation;
@@ -33,6 +33,11 @@ public class Product {
         private String size;
         @Column(columnDefinition ="TEXT")
         private String detail;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
+    private Date createdAt = new Date();
+
 
         @Column(columnDefinition = "TEXT")
         private String overview;
