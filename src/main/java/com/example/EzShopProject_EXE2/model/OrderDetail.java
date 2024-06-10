@@ -1,5 +1,7 @@
 package com.example.EzShopProject_EXE2.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -21,14 +21,9 @@ public class Order {
 
     private LocalDateTime orderDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "status_id", nullable = false)
-    private OrderStatus status;
+    private int status;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "user_order",nullable = false)
-    //@JsonBackReference
-    private User user;
+    private Long userId;
 
     private Long shopId;
 

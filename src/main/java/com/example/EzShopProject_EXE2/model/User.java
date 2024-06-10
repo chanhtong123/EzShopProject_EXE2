@@ -33,7 +33,7 @@ public class User implements UserDetails {
     private String lastName;
 
     @Column(name = "username")
-        private String userName;
+    private String userName;
 
     @Column(name = "password")
     private String passWord;
