@@ -15,4 +15,6 @@ public interface IOrderService {
     void delete(long id);
 
     OrderDTO update(long id, @Valid OrderDTO orderDTO);
+
+    List<OrderDTO> findByUserId(Long userId);
 }

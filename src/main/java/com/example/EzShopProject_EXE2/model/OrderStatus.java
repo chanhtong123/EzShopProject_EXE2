@@ -4,25 +4,21 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "order_detail")
+@Table(name = "order_status")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDetail {
+public class OrderStatus {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int quantity;
+    @Column(name = "name", length = 255)
+    private String name;
 
-    private double price;
-
-//    private Long productId;
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-
+    @Column(name = "code", length = 255)
+    private String code;
 }
