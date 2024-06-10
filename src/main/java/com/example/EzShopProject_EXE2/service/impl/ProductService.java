@@ -133,39 +133,39 @@ public class ProductService implements IProductService {
             products = productRepository.findBySituation(situation);
 
         }  else if (name != null && minPrice != null && maxPrice != null && brand != null && situation != null) {
-                products = productRepository.findByNameContainingAndPriceBetweenAndBrandAndSituation(name, minPrice, maxPrice, brand, situation);
-            } else if (name != null && minPrice != null && maxPrice != null && situation != null) {
-                products = productRepository.findByNameContainingAndPriceBetweenAndSituation(name, minPrice, maxPrice, situation);
-            } else if (name != null && minPrice != null && maxPrice != null) {
-                products = productRepository.findByNameContainingAndPriceBetween(name, minPrice, maxPrice);
-            } else if (name != null && minPrice != null && brand != null) {
-                products = productRepository.findByNameContainingAndPriceGreaterThanEqualAndBrand(name, minPrice, brand);
-            } else if (name != null && minPrice != null && situation != null) {
-                products = productRepository.findByNameContainingAndPriceGreaterThanEqualAndSituation(name, minPrice, situation);
-            } else if (name != null && minPrice != null) {
-                products = productRepository.findByNameContainingAndPriceGreaterThanEqual(name, minPrice);
-            } else if (name != null && maxPrice != null && brand != null && situation != null) {
-                products = productRepository.findByNameContainingAndPriceLessThanEqualAndBrandAndSituation(name, maxPrice, brand, situation);
-            } else if (name != null && maxPrice != null && brand != null) {
-                products = productRepository.findByNameContainingAndPriceLessThanEqualAndBrand(name, maxPrice, brand);
-            } else if (name != null && maxPrice != null && situation != null) {
-                products = productRepository.findByNameContainingAndPriceLessThanEqualAndSituation(name, maxPrice, situation);
-            } else if (name != null && maxPrice != null) {
-                products = productRepository.findByNameContainingAndPriceLessThanEqual(name, maxPrice);
-            } else if (minPrice != null && maxPrice != null && brand != null && situation != null) {
-                products = productRepository.findByPriceBetweenAndBrandAndSituation(minPrice, maxPrice, brand, situation);
-            } else if (minPrice != null && maxPrice != null && brand != null) {
-                products = productRepository.findByPriceBetweenAndBrand(minPrice, maxPrice, brand);
-            } else if (minPrice != null && maxPrice != null && situation != null) {
-                products = productRepository.findByPriceBetweenAndSituation(minPrice, maxPrice, situation);
-            } else if (minPrice != null && maxPrice != null) {
-                products = productRepository.findByPriceBetween(minPrice, maxPrice);
-            } else {
-                products = productRepository.findAll();
-            }
-
-            return products.stream().map(this::mapToDto).collect(Collectors.toList());
+            products = productRepository.findByNameContainingAndPriceBetweenAndBrandAndSituation(name, minPrice, maxPrice, brand, situation);
+        } else if (name != null && minPrice != null && maxPrice != null && situation != null) {
+            products = productRepository.findByNameContainingAndPriceBetweenAndSituation(name, minPrice, maxPrice, situation);
+        } else if (name != null && minPrice != null && maxPrice != null) {
+            products = productRepository.findByNameContainingAndPriceBetween(name, minPrice, maxPrice);
+        } else if (name != null && minPrice != null && brand != null) {
+            products = productRepository.findByNameContainingAndPriceGreaterThanEqualAndBrand(name, minPrice, brand);
+        } else if (name != null && minPrice != null && situation != null) {
+            products = productRepository.findByNameContainingAndPriceGreaterThanEqualAndSituation(name, minPrice, situation);
+        } else if (name != null && minPrice != null) {
+            products = productRepository.findByNameContainingAndPriceGreaterThanEqual(name, minPrice);
+        } else if (name != null && maxPrice != null && brand != null && situation != null) {
+            products = productRepository.findByNameContainingAndPriceLessThanEqualAndBrandAndSituation(name, maxPrice, brand, situation);
+        } else if (name != null && maxPrice != null && brand != null) {
+            products = productRepository.findByNameContainingAndPriceLessThanEqualAndBrand(name, maxPrice, brand);
+        } else if (name != null && maxPrice != null && situation != null) {
+            products = productRepository.findByNameContainingAndPriceLessThanEqualAndSituation(name, maxPrice, situation);
+        } else if (name != null && maxPrice != null) {
+            products = productRepository.findByNameContainingAndPriceLessThanEqual(name, maxPrice);
+        } else if (minPrice != null && maxPrice != null && brand != null && situation != null) {
+            products = productRepository.findByPriceBetweenAndBrandAndSituation(minPrice, maxPrice, brand, situation);
+        } else if (minPrice != null && maxPrice != null && brand != null) {
+            products = productRepository.findByPriceBetweenAndBrand(minPrice, maxPrice, brand);
+        } else if (minPrice != null && maxPrice != null && situation != null) {
+            products = productRepository.findByPriceBetweenAndSituation(minPrice, maxPrice, situation);
+        } else if (minPrice != null && maxPrice != null) {
+            products = productRepository.findByPriceBetween(minPrice, maxPrice);
+        } else {
+            products = productRepository.findAll();
         }
+
+        return products.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
 
 
     public List<ProductDto> getProductsByTitleId(Long titleId) {
@@ -255,12 +255,6 @@ public class ProductService implements IProductService {
             product.setTitle(existingTitle);
         }
         // Lấy thông tin về cửa hàng
-        if (productDto.getShopId() != null) {
-            Shop existingShop = shopRepository.findById(productDto.getShopId().getShopId())
-                    .orElseThrow(() -> new DataNotFoundException(
-                            "Cannot find shop with id: " + productDto.getShopId().getShopId()));
-            product.setShopId(existingShop);
-        }
 
         // Add mappings for shop and orderDetails if necessary
         return product;
@@ -276,17 +270,6 @@ public class ProductService implements IProductService {
         categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
         return categoryDto;
-    }
-    public static ShopDto mapToShopDto(Shop shop) {
-        ShopDto shopDto = new ShopDto();
-        shopDto.setShopId(shop.getShopId());
-        shopDto.setName(shop.getName());
-        shopDto.setAddress(shop.getAddress());
-        shopDto.setPhoneNumber(shop.getPhoneNumber());
-        shopDto.setWallet(shop.getWallet());
-        shopDto.setStatus(shop.getStatus());
-        shopDto.setOwner(shop.getOwner());
-        return shopDto;
     }
 
     private TitleDto mapToTitleDto(Title title) {

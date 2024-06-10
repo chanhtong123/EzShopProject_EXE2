@@ -10,9 +10,11 @@ public interface IOrderService {
 
     OrderDto findById(long id);
 
-    OrderDto save(OrderDto orderDTO);
+    OrderDto save(OrderDto OrderDto);
 
     void delete(long id);
 
-    OrderDto update(long id, @Valid OrderDto orderDTO);
+    OrderDto update(long id, @Valid OrderDto OrderDto);
+
+    List<OrderDto> findByUserId(Long userId);
 }
