@@ -24,26 +24,33 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        req->req.requestMatchers("/login/**","/register/**", "/guest/**","/public/**")  //khong can token van vao url duoc
-                                .permitAll()
-                                .requestMatchers("/admin/**").hasAnyAuthority("ADMIN") //role ADMIN
-                                .anyRequest()
-                                .authenticated()
-
-                ).userDetailsService(userDetailsServiceImp)
-                .sessionManagement(session ->session
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/login/**", "/register/**", "/guest/**", "/")
+                        .permitAll()
+                        .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
+                        .anyRequest()
+                        .authenticated()
+                )
+                .userDetailsService(userDetailsServiceImp)
+                .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
