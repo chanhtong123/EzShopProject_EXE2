@@ -259,7 +259,7 @@ public class ProductService implements IProductService {
             Shop existingShop = shopRepository.findById(productDto.getShopId().getShopId())
                     .orElseThrow(() -> new DataNotFoundException(
                             "Cannot find shop with id: " + productDto.getShopId().getShopId()));
-            product.setShopId(existingShop);
+            product.setShop(existingShop);
         }
 
         // Add mappings for shop and orderDetails if necessary
@@ -276,17 +276,6 @@ public class ProductService implements IProductService {
         categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
         return categoryDto;
-    }
-    public static ShopDto mapToShopDto(Shop shop) {
-        ShopDto shopDto = new ShopDto();
-        shopDto.setShopId(shop.getShopId());
-        shopDto.setName(shop.getName());
-        shopDto.setAddress(shop.getAddress());
-        shopDto.setPhoneNumber(shop.getPhoneNumber());
-        shopDto.setWallet(shop.getWallet());
-        shopDto.setStatus(shop.getStatus());
-        shopDto.setOwner(shop.getOwner());
-        return shopDto;
     }
 
     private TitleDto mapToTitleDto(Title title) {
