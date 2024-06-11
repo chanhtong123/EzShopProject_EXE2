@@ -22,6 +22,11 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public Long extractUserId(String token) {
+        return Long.parseLong(extractClaim(token, Claims::getSubject));
+    }
+
+
     public boolean isValid(String token, UserDetails user){
         String username = extractUserName(token);
         return (username.equals(user.getUsername())) && !isTokenExprired(token);

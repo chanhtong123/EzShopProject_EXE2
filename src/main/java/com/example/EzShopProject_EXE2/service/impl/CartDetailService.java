@@ -2,13 +2,19 @@ package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.dto.CartDetailDto;
 import com.example.EzShopProject_EXE2.dto.ProductDto;
-import com.example.EzShopProject_EXE2.model.CartDetail;
-import com.example.EzShopProject_EXE2.model.Product;
+import com.example.EzShopProject_EXE2.model.*;
 import com.example.EzShopProject_EXE2.repository.CartDetailRepository;
+import com.example.EzShopProject_EXE2.repository.CartRepository;
+import com.example.EzShopProject_EXE2.repository.ProductRepository;
+import com.example.EzShopProject_EXE2.repository.ShopRepository;
+import com.example.EzShopProject_EXE2.response.ProductResponse;
 import com.example.EzShopProject_EXE2.service.ICartDetailService;
+import com.example.EzShopProject_EXE2.service.ICartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,16 +24,20 @@ import java.util.stream.Collectors;
 public class CartDetailService implements ICartDetailService {
 
     private final CartDetailRepository cartDetailRepository;
+    private final JwtService jwtService;
+    private final CartRepository cartRepository;
+    private final AuthenticationService authenticationService;
+    private final ICartService iCartService;
+    private final ProductRepository productRepository;
 
-    @Override
-    public CartDetail createCartDetail(CartDetail cartDetail) {
-        return cartDetailRepository.save(cartDetail);
-    }
+
 
 //    @Override
 //    public List<CartDetail> getCartDetailsByCartId(Long cartId) {
 //        return cartDetailRepository.findByCartId(cartId);
 //    }
+
+
 
 
     @Override
@@ -85,4 +95,24 @@ public class CartDetailService implements ICartDetailService {
     public void deleteCartDetail(Long id) {
          cartDetailRepository.deleteById(id);
     }
+
+    @Override
+    public CartDetail createCartDetail(Long productId, Long cartId) {
+
+        Product product = productRepository.findProductsById(productId);
+
+        Cart cart = iCartService.getCartById(cartId);
+
+        CartDetail cartDetail = new CartDetail();
+        cartDetail.setProduct(product);
+        cartDetail.setCreatedAt(new Date());
+        cartDetail.setPrice(product.getPrice());
+        cartDetail.setShop(product.getShop());
+        cartDetail.setCart(cart);
+
+       return cartDetailRepository.save(cartDetail);
+
+    }
+
+
 }

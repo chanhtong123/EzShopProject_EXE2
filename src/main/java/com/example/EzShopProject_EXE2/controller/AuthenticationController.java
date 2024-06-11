@@ -3,6 +3,7 @@ package com.example.EzShopProject_EXE2.controller;
 import com.example.EzShopProject_EXE2.model.User;
 import com.example.EzShopProject_EXE2.response.AuthenticationResponse;
 import com.example.EzShopProject_EXE2.service.impl.AuthenticationService;
+import com.example.EzShopProject_EXE2.service.impl.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

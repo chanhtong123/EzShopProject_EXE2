@@ -25,10 +25,6 @@ public class CartDetail {
     @Column(nullable = false, updatable = false)
     private Date createdAt = new Date();
 
-
-
-
-
     @ManyToOne
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;

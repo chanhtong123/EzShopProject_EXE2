@@ -19,4 +19,5 @@ public class CartDetailDto {
     private Cart cart;
     private Shop shop;
     private ProductDto product;
+
 }

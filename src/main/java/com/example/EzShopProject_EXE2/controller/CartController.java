@@ -13,22 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
     private final CartService cartService;
 
-//    @GetMapping("/user")
-//    public ResponseEntity<Cart> getCartByToken(@RequestHeader("Authorization") String authorizationHeader) {
-//        String token = extractTokenFromHeader(authorizationHeader);
-//        Cart cart = cartService.getCartByToken(token);
-//        return ResponseEntity.ok(cart);
-//    }
-//
-//    private String extractTokenFromHeader(String authorizationHeader) {
-//        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-//            String tokenWithBearer = authorizationHeader.substring(7); // Loại bỏ tiền tố "Bearer "
-//            String token = tokenWithBearer.trim(); // Loại bỏ khoảng trắng ở đầu và cuối chuỗi token
-//            return token;
-//        } else {
-//            throw new IllegalArgumentException("Authorization header is missing or invalid");
-//        }
-//    }
+
 
     @GetMapping("/user")
     public ResponseEntity<Cart> getCartByToken(@RequestHeader("Authorization") String authorizationHeader) {
@@ -44,6 +29,7 @@ public class CartController {
             throw new IllegalArgumentException("Authorization header is missing or invalid");
         }
     }
+
 
 
 

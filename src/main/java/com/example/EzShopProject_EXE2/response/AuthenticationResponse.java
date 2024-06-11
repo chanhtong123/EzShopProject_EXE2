@@ -1,5 +1,7 @@
 package com.example.EzShopProject_EXE2.response;
 
+import com.example.EzShopProject_EXE2.model.User;
+
 public class AuthenticationResponse {
     private String token;
 

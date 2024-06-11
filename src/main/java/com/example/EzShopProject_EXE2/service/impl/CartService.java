@@ -9,6 +9,7 @@ import com.example.EzShopProject_EXE2.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -37,4 +38,19 @@ public class CartService implements ICartService {
             throw new RuntimeException("User not found for username: " + username);
         }
     }
+
+    @Override
+    public Cart getCartById(Long cartId) {
+        return cartRepository.findById(cartId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy giỏ hàng với id: " + cartId));
+    }
+
+    @Override
+    public Cart createCart(Long id) {
+            Cart newCart = new Cart();
+            newCart.setId(id);
+            newCart.setCreatedAt(new Date());
+            return cartRepository.save(newCart);
+        }
+
 }
