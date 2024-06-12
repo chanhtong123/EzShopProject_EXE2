@@ -1,6 +1,8 @@
 package com.example.EzShopProject_EXE2.service.impl;
 
+import com.example.EzShopProject_EXE2.model.Cart;
 import com.example.EzShopProject_EXE2.model.User;
+import com.example.EzShopProject_EXE2.repository.CartRepository;
 import com.example.EzShopProject_EXE2.repository.UserRepository;
 import com.example.EzShopProject_EXE2.response.AuthenticationResponse;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -16,6 +20,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final CartRepository cartRepository;
 
 
     public AuthenticationResponse register(User request){
@@ -36,6 +41,11 @@ public class AuthenticationService {
         user = repository.save(user);
 
         String token = jwtService.generateToken(user);
+
+        Cart newCart = new Cart();
+        newCart.setUser(user);
+        newCart.setCreatedAt(new Date());
+        cartRepository.save(newCart);
 
         return new AuthenticationResponse(token);
     }

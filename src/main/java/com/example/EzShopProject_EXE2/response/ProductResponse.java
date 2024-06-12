@@ -18,7 +18,6 @@ public class ProductResponse {
     private String code;
     private String status;
     private int quantity;
-    private int category;
     private String brand;
     private int weight;
     private int situation;
