@@ -67,7 +67,6 @@ public class ProductService implements IProductService {
         existingProduct.setPrice(productDto.getPrice());
         existingProduct.setDescription(productDto.getDescription());
         existingProduct.setStatus(productDto.getStatus());
-        existingProduct.setQuantity(productDto.getQuantity());
         existingProduct.setBrand(productDto.getBrand());
         existingProduct.setWeight(productDto.getWeight());
         existingProduct.setSituation((productDto.getSituation()));
@@ -199,7 +198,6 @@ public class ProductService implements IProductService {
         productDto.setDescription(product.getDescription());
         productDto.setCode(product.getCode());
         productDto.setStatus(product.getStatus());
-        productDto.setQuantity(product.getQuantity());
         productDto.setBrand(product.getBrand());
         productDto.setWeight(product.getWeight());
         productDto.setSituation(product.getSituation());
@@ -228,7 +226,6 @@ public class ProductService implements IProductService {
                 .description(productDto.getDescription())
                 .code(productDto.getCode())
                 .status(productDto.getStatus())
-                .quantity(productDto.getQuantity())
                 .brand(productDto.getBrand())
                 .weight(productDto.getWeight())
                 .situation(productDto.getSituation())
