@@ -207,6 +207,9 @@ public class ProductService implements IProductService {
         productDto.setColor(product.getColor());
         productDto.setDetail(product.getDetail());
         productDto.setSize(product.getSize());
+        productDto.setImage2(product.getImage2());
+        productDto.setImage3(product.getImage3());
+        productDto.setImage4(product.getImage4());
         productDto.setCategories(product.getCategories().stream()
                 .map(this::mapToCategoryDto)
                 .collect(Collectors.toSet()));

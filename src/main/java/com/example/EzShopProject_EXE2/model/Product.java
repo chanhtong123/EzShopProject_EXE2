@@ -34,6 +34,10 @@ public class Product {
         @Column(columnDefinition ="TEXT")
         private String detail;
 
+        private String image2;
+        private String image3;
+        private String image4;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private Date createdAt = new Date();
