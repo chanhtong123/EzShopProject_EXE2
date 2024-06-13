@@ -3,6 +3,7 @@ package com.example.EzShopProject_EXE2.controller;
 import com.example.EzShopProject_EXE2.dto.OrderDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.exception.BadRequestException;
+import com.example.EzShopProject_EXE2.model.Order;
 import com.example.EzShopProject_EXE2.service.IOrderService;
 import jakarta.validation.Valid;
 import org.springframework.validation.FieldError;
@@ -24,31 +25,36 @@ public class OrderController {
     }
 
     @GetMapping("/id")
-    public ResponseEntity<OrderDto> getOrderById(@RequestParam("id") long id) throws DataNotFoundException {
-        OrderDto OrderDto = orderService.findById(id);
-        if (OrderDto == null) {
+    public ResponseEntity<Order> getOrderById(@RequestParam("id") long id) throws DataNotFoundException {
+        Order order = orderService.findById(id);
+        if (order == null) {
             throw new DataNotFoundException("Order not found for ID: " + id);
         }
-        return new ResponseEntity<>(OrderDto, HttpStatus.OK);
+        return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createOrder( @Valid @RequestBody OrderDto OrderDto,
-                                          BindingResult result) {
+    public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDto orderDto, BindingResult result) {
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+
         try {
-            if (result.hasErrors()) {
-                List<String> errorMessages = result.getFieldErrors()
-                        .stream()
-                        .map(FieldError::getDefaultMessage)
-                        .toList();
-                return ResponseEntity.badRequest().body(errorMessages);
-            }
-            OrderDto order = orderService.save(OrderDto);
+            Order order = orderService.save(orderDto);
             return new ResponseEntity<>(order, HttpStatus.CREATED);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
+        } catch (BadRequestException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         } catch (Exception e) {
-            throw new BadRequestException("Failed to create order: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOrder( @Valid @PathVariable long id,
@@ -62,7 +68,7 @@ public class OrderController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-            OrderDto updatedOrder = orderService.update(id, OrderDto);
+            Order updatedOrder = orderService.update(id, OrderDto);
             return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
         } catch (Exception e) {
             throw new BadRequestException("Failed to update order: " + e.getMessage());
@@ -81,7 +87,7 @@ public class OrderController {
 
 
     @GetMapping("/")
-    public ResponseEntity<List<OrderDto>> getAllOrders() {
+    public ResponseEntity<?> getAllOrders() {
         try {
             List<OrderDto> orders = orderService.findAll();
             return new ResponseEntity<>(orders, HttpStatus.OK);

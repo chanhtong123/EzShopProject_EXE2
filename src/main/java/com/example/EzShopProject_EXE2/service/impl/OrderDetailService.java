@@ -60,7 +60,6 @@ public class OrderDetailService implements IOrderDetailService {
             if (orderDetailOptional.isPresent()) {
                 OrderDetail orderDetailToUpdate = orderDetailOptional.get();
                 orderDetailToUpdate.setPrice(orderDetail.getPrice());
-                orderDetailToUpdate.setQuantity(orderDetail.getQuantity());
                 orderDetailToUpdate.setProduct(orderDetail.getProduct());
                 return OrderDetailConverter.toDto(orderDetailRepository.save(orderDetailToUpdate));
             } else {
@@ -81,4 +80,17 @@ public class OrderDetailService implements IOrderDetailService {
             throw new RuntimeException("Error deleting order detail", e);
         }
     }
+
+    @Override
+    public List<OrderDetailDto> getOrderDetailByOrderId(long id) {
+        try {
+            List<OrderDetail> orderDetailOptional = orderDetailRepository.findByOrderId(id);
+            List<OrderDetailDto> orderDetailDtos = OrderDetailConverter.toDto(orderDetailOptional);
+            return orderDetailDtos;
+        }catch (Exception e) {
+            logger.error("Error getting order detail by ID", e);
+            throw new RuntimeException("Error getting order detail by ID", e);
+        }
+    }
+
 }

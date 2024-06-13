@@ -2,6 +2,7 @@ package com.example.EzShopProject_EXE2.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,14 +18,17 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int quantity;
-
     private double price;
 
-//    private Long productId;
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @Column(name = "total_amount")
+    private double totalAmount;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "product_id",nullable = false)
     private Product product;
 
-
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "order_id",nullable = false)
+    @JsonBackReference
+    private Order orders;
 }

@@ -1,8 +1,6 @@
 package com.example.EzShopProject_EXE2.model;
 
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,6 +26,5 @@ public class Cart {
     private Date createdAt = new Date();
 
     private Long orderId;
-
 
 }

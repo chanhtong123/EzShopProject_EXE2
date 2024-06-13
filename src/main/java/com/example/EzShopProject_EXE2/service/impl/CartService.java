@@ -22,7 +22,8 @@ public class CartService implements ICartService {
 
     @Override
     public Cart getCartByUserId(Long userId) {
-        return cartRepository.findByUserId(userId);
+        Optional<Cart> cart = cartRepository.findByUserId(userId);
+        return cart.orElse(null);
     }
 
     @Override

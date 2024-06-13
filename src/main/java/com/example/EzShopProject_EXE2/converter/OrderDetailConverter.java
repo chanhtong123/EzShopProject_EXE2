@@ -14,7 +14,6 @@ public class OrderDetailConverter {
                 .id(orderDetail.getId())
                 .price(orderDetail.getPrice())
                 .productId(orderDetail.getId())
-                .quantity(orderDetail.getQuantity())
                 .build();
     }
 
@@ -22,7 +21,6 @@ public class OrderDetailConverter {
         return OrderDetail.builder()
                 .id(orderDetailDto.getId())
                 .price(orderDetailDto.getPrice())
-                .quantity(orderDetailDto.getQuantity())
                 .build();
     }
 

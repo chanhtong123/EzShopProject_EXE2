@@ -4,6 +4,7 @@ import com.example.EzShopProject_EXE2.dto.OrderDto;
 import com.example.EzShopProject_EXE2.model.Order;
 import com.example.EzShopProject_EXE2.model.User;
 import com.example.EzShopProject_EXE2.repository.UserRepository;
+import com.example.EzShopProject_EXE2.response.OrderResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,8 +23,23 @@ public class OrderConverter {
                 .id(order.getId())
                 .orderDate(order.getOrderDate())
                 .userId(order.getUser().getId())
+                .orderStatus(order.getStatus())
+                .totalAmount(order.getTotalAmount())
+                .profit(order.getProfit())
+                .paymentStatus(order.getPaymentStatus())
                 .shopId(order.getShopId())
-                .status(order.getStatus())
+                .active(order.getActive())
+                .address(order.getAddress())
+                .province(order.getProvince())
+                .district(order.getDistrict())
+                .ward(order.getWard())
+                .phoneNumber(order.getPhoneNumber())
+                .email(order.getEmail())
+                .fullName(order.getFullName())
+                .notes(order.getNotes())
+                .shippingDate(order.getShippingDate())
+                .shippingMethod(order.getShippingMethod())
+                .paymentMethod(order.getPaymentMethod())
                 .customerName(order.getUser().getUsername())
                 .build();
         return orderDto;
@@ -34,11 +50,25 @@ public class OrderConverter {
                 .builder()
                 .id(OrderDto.getId())
                 .orderDate(OrderDto.getOrderDate())
+                .status(OrderDto.getOrderStatus())
                 .shopId(OrderDto.getShopId())
-                .status(OrderDto.getStatus())
+                .active(OrderDto.getActive())
+                .address(OrderDto.getAddress())
+                .province(OrderDto.getProvince())
+                .district(OrderDto.getDistrict())
+                .ward(OrderDto.getWard())
+                .phoneNumber(OrderDto.getPhoneNumber())
+                .email(OrderDto.getEmail())
+                .fullName(OrderDto.getFullName())
+                .notes(OrderDto.getNotes())
+                .shippingDate(OrderDto.getShippingDate())
+                .shippingMethod(OrderDto.getShippingMethod())
+                .paymentMethod(OrderDto.getPaymentMethod())
+                .totalAmount(OrderDto.getTotalAmount())
+                .profit(OrderDto.getProfit())
                 .build();
-        User user = userRepository.findById(OrderDto.getUserId()).get();
-        order.setUser(user);
+        Optional<User> user = userRepository.findById(OrderDto.getUserId());
+        user.ifPresent(order::setUser);
         return order;
     }
 
@@ -46,5 +76,32 @@ public class OrderConverter {
         return orders.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public static OrderResponse fromOrder(Order order) {
+        OrderResponse orderResponse =  OrderResponse
+                .builder()
+                .id(order.getId())
+                .userId(order.getUser().getId())
+                .active(order.getActive())
+                .address(order.getAddress())
+                .province(order.getProvince())
+                .district(order.getDistrict())
+                .ward(order.getWard())
+                .phoneNumber(order.getPhoneNumber())
+                .email(order.getEmail())
+                .fullName(order.getFullName())
+                .notes(order.getNotes())
+                .shippingDate(order.getShippingDate())
+                .shippingMethod(order.getShippingMethod())
+                .paymentMethod(order.getPaymentMethod())
+                .totalAmount(order.getTotalAmount())
+                .profit(order.getProfit())
+                .paymentStatus(order.getPaymentStatus())
+                .orderDetails(order.getOrderDetails())
+                .build();
+        orderResponse.setCreatedAt(order.getCreatedAt());
+        orderResponse.setUpdatedAt(order.getUpdatedAt());
+        return orderResponse;
     }
 }

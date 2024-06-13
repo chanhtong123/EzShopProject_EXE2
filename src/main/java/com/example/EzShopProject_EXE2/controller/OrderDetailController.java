@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/order-details")
+@RequestMapping("guest/api/order-details")
 @CrossOrigin
 public class OrderDetailController {
 
@@ -63,12 +63,24 @@ public class OrderDetailController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrderDetail(@PathVariable("id") long id) {
-
         try {
             orderDetailService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/order_id")
+    public ResponseEntity<?> getOrderDetailByOrderId(@RequestParam("order_id") long orderId) {
+        try {
+            List<OrderDetailDto> orderDetailDtos = orderDetailService.getOrderDetailByOrderId(orderId);
+            if (orderDetailDtos != null) {
+                return new ResponseEntity<>(orderDetailDtos, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 }

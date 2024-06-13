@@ -1,21 +1,25 @@
 package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.converter.OrderConverter;
+import com.example.EzShopProject_EXE2.dto.CartItemDto;
 import com.example.EzShopProject_EXE2.dto.OrderDto;
+import com.example.EzShopProject_EXE2.dto.analysis.OrderStatsDTO;
+import com.example.EzShopProject_EXE2.dto.analysis.RevenueDayDTO;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
-import com.example.EzShopProject_EXE2.model.Order;
-import com.example.EzShopProject_EXE2.model.OrderStatus;
-import com.example.EzShopProject_EXE2.model.User;
-import com.example.EzShopProject_EXE2.repository.OrderRepository;
-import com.example.EzShopProject_EXE2.repository.OrderStatusRepository;
-import com.example.EzShopProject_EXE2.repository.UserRepository;
+import com.example.EzShopProject_EXE2.exception.InsufficientQuantityException;
+import com.example.EzShopProject_EXE2.model.*;
+import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
+import com.example.EzShopProject_EXE2.repository.*;
 import com.example.EzShopProject_EXE2.service.IOrderService;
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +30,10 @@ public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final OrderConverter orderConverter;
     private final UserRepository userRepository;
-    private final OrderStatusRepository orderStatusRepository;
+    private final ProductRepository productRepository;
+    private final OrderDetailRepository orderDetailRepository;
+    private final CartRepository cartRepository;
+    private final CartDetailRepository cartDetailRepository;
 
     @Override
     public List<OrderDto> findAll() {
@@ -41,14 +48,10 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderDto findById(long id) {
+    public Order findById(long id) {
         try {
             Optional<Order> order = orderRepository.findById(id);
-            if (order.isPresent()) {
-                Order existingOrder = order.get();
-                return orderConverter.toDto(existingOrder);
-            }
-            return null;
+            return order.orElse(null);
         } catch (Exception e) {
             logger.error("Error finding order by ID", e);
             throw new RuntimeException("Error finding order by ID", e);
@@ -56,16 +59,65 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderDto save(OrderDto OrderDto) {
+    @Transactional
+    public Order save(OrderDto orderDto) throws Exception {
         try {
-            Order order = orderConverter.toEntity(OrderDto);
-            Order savedOrder = orderRepository.save(order);
-            return orderConverter.toDto(savedOrder);
+            // Fetch user and statuses
+            User user = userRepository.findById(orderDto.getUserId())
+                    .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + orderDto.getUserId()));
+
+            Cart cart = cartRepository.findByUserId(orderDto.getUserId())
+                    .orElseThrow(() -> new DataNotFoundException("Cart not found for user id: " + orderDto.getUserId()));
+            // Convert DTO to entity and set relationships
+            Order order = orderConverter.toEntity(orderDto);
+            order.setUser(user);
+            order.setOrderDate(LocalDateTime.now());
+            order.setStatus(OrderStatus.Pending);
+            order.setPaymentStatus(orderDto.getPaymentStatus());
+
+            LocalDate shippingDate = orderDto.getShippingDate() == null ? LocalDate.now() : orderDto.getShippingDate();
+            if (shippingDate.isBefore(LocalDate.now())) {
+                throw new DataNotFoundException("Date must be at least today!");
+            }
+            order.setShippingDate(shippingDate);
+            order.setActive(true);
+            order.setTotalAmount(orderDto.getTotalAmount());
+
+            // Update product quantities if status id is 5
+            if (order.getStatus() != null && order.getStatus() == OrderStatus.Completed) {
+                updateProductQuantities(orderDto.getCartItems());
+            }
+
+            // Persist order to obtain a managed entity
+            order = orderRepository.save(order);
+
+            // Create order details
+            List<OrderDetail> orderDetails = new ArrayList<>();
+            List<CartDetail> cartDetails = cartDetailRepository.findByCartId(cart.getId());
+            for (CartDetail cartDetail : cartDetails) {
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setOrders(order);
+
+                Long productId = cartDetail.getProduct().getId();
+                Product product = productRepository.findById(productId)
+                        .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + productId));
+
+                orderDetail.setPrice(product.getPrice());
+                orderDetail.setProduct(product);
+                orderDetails.add(orderDetail);
+            }
+            cart.setOrderId(order.getId());
+            cartRepository.save(cart);
+            // Save all order details
+            orderDetailRepository.saveAll(orderDetails);
+
+            return order;
         } catch (Exception e) {
-            logger.error("Error creating order", e);
-            throw new RuntimeException("Error creating order", e);
+            throw new Exception("Failed to save order: " + e.getMessage(), e);
         }
     }
+
+
 
     @Override
     public void delete(long id) {
@@ -77,32 +129,42 @@ public class OrderService implements IOrderService {
         }
     }
 
+
     @Override
-    public OrderDto update(long id, @Valid OrderDto OrderDto) {
-        try {
-            User existingUser = userRepository.findById(OrderDto.getUserId())
-                    .orElseThrow(()-> new DataNotFoundException("Cannot find user with id: " + id));
-            OrderStatus orderStatus = orderStatusRepository.findById(OrderDto.getStatus().getId())
-                    .orElse(OrderDto.getStatus());
-            Optional<Order> existingOrderOpt = orderRepository.findById(id);
-            if (existingOrderOpt.isPresent()) {
+    @Transactional
+    public Order update(Long id, OrderDto orderDTO) throws DataNotFoundException {
+        //try {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: " + id));
+        User existingUser = userRepository.findById(orderDTO.getUserId())
+                .orElseThrow(()-> new DataNotFoundException("Cannot find user with id: " + id));
 
-                Order existingOrder = existingOrderOpt.get();
-                existingOrder.setOrderDate(OrderDto.getOrderDate());
-                existingOrder.setStatus(OrderDto.getStatus());
-                existingOrder.setUser(existingUser);
-                existingOrder.setStatus(orderStatus);
-                existingOrder.setShopId(OrderDto.getShopId());
-
-                Order updatedOrder = orderRepository.save(existingOrder);
-                return orderConverter.toDto(updatedOrder);
-            } else {
-                throw new RuntimeException("Order not found");
+        order = orderConverter.toEntity(orderDTO);
+        order.setUser(existingUser);
+        order.setStatus(orderDTO.getOrderStatus());
+        order.setPaymentStatus(orderDTO.getPaymentStatus());
+        orderRepository.save(order);
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        OrderDetail orderDetail;
+        for (CartItemDto cartItemDto : orderDTO.getCartItems()) {
+            orderDetail = new OrderDetail();
+            orderDetail.setOrders(order);
+            Long productId = cartItemDto.getProductId();
+            OrderDetail orderDetailExisting = orderDetailRepository.findById(cartItemDto.getId())
+                    .orElseThrow(() -> new DataNotFoundException("Orderdetail not found with id: " + cartItemDto.getId()));
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + productId));
+            orderDetail.setId(orderDetailExisting.getId());
+            orderDetail.setPrice(product.getPrice());
+            orderDetail.setProduct(product);
+            order.setPaymentStatus(orderDTO.getPaymentStatus());
+            if (order.getStatus() != null && order.getStatus() == OrderStatus.Completed) {
+                updateProductQuantities(orderDTO.getCartItems());
             }
-        } catch (Exception e) {
-            logger.error("Error updating order", e);
-            throw new RuntimeException("Error updating order", e);
+            orderDetails.add(orderDetail);
         }
+        orderDetailRepository.saveAll(orderDetails);
+        return order;
     }
 
     @Override
@@ -115,4 +177,64 @@ public class OrderService implements IOrderService {
             throw new RuntimeException("Error finding order by ID", e);
         }
     }
+
+    private void updateProductQuantities(List<CartItemDto> cartItems) throws DataNotFoundException {
+        for (CartItemDto cartItemDto : cartItems) {
+            Long productId = cartItemDto.getProductId();
+            int quantity = cartItemDto.getQuantity();
+
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + productId));
+
+            // Ensure that the quantity to be deducted is not greater than the available quantity
+            if (quantity > product.getQuantity()) {
+                throw new InsufficientQuantityException("Not enough quantity available for product with id: " + productId);
+            }
+
+            int updatedQuantity = product.getQuantity() - quantity;
+            product.setQuantity(updatedQuantity);
+            productRepository.save(product);
+        }
+    }
+
+    public OrderStatsDTO getOrderStats() {
+        OrderStatsDTO orderStatsDTO = new OrderStatsDTO();
+        long totalOrders = orderRepository.countTotalOrders();
+        orderStatsDTO.setTotalOrders(totalOrders);
+        double orderChangePercentage = orderRepository.calculateOrderChange();
+        orderStatsDTO.setOrderChangePercentage(orderChangePercentage);
+        return orderStatsDTO;
+    }
+
+//    public RevenueDTO getRevenueStatistics() {
+//        Double currentMonthRevenue = orderRepository.findTotalRevenueCurrentMonth();
+//        Double lastMonthRevenue = orderRepository.findTotalRevenueLastMonth();
+//
+//        Double revenueChangePercentage = calculateRevenueChangePercentage(currentMonthRevenue, lastMonthRevenue);
+//
+//        return new RevenueDTO(currentMonthRevenue, lastMonthRevenue, revenueChangePercentage);
+//    }
+
+    private Double calculateRevenueChangePercentage(Double currentMonthRevenue, Double lastMonthRevenue) {
+        if (lastMonthRevenue == null || lastMonthRevenue == 0) {
+            return currentMonthRevenue == null ? null : 100.0; // Assuming a 100% increase if last month revenue is 0
+        }
+        return ((currentMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100;
+    }
+
+//    public RevenueDayDTO getTotalSales() {
+//        RevenueDayDTO totalSalesDTO = new RevenueDayDTO();
+//        totalSalesDTO.setTotalSalesToday(orderRepository.getTotalAmountToday());
+//        totalSalesDTO.setTotalSalesYesterday(orderRepository.getTotalAmountYesterday());
+//        return totalSalesDTO;
+//    }
+//
+//    @Override
+//    public Integer countOrdersByProductId(Long productId) {
+//        return orderDetailRepository.countOrderByProductId(productId);
+//    }
+//    @Override
+//    public Optional<Double> getProductRevenue(Long productId) {
+//        return orderDetailRepository.findTotalRevenueByProductId(productId);
+//    }
 }
