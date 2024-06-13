@@ -96,7 +96,6 @@ public class ProductController {
                             .description(product.getDescription())
                             .code(product.getDescription())
                             .status(product.getStatus())
-                            .quantity(product.getQuantity())
                             .brand(product.getBrand())
                             .weight(product.getWeight())
                             .situation(product.getSituation())

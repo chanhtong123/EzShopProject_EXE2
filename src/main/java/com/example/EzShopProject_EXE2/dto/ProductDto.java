@@ -31,7 +31,6 @@ public class ProductDto {
     @NotBlank
     private String status;
 
-    private int quantity;
     private String brand;
     private int weight;
     private int situation;
@@ -39,6 +38,9 @@ public class ProductDto {
     private String color;
     private String detail;
     private String size;
+    private String image2;
+    private String image3;
+    private String image4;
 
     @JsonProperty("categories")
     private Set<CategoryDto> categories = new HashSet<>();

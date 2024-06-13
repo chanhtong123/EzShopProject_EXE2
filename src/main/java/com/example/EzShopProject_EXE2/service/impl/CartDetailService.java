@@ -66,7 +66,6 @@ public class CartDetailService implements ICartDetailService {
         dto.setDescription(product.getDescription());
         dto.setCode(product.getCode());
         dto.setStatus(product.getStatus());
-        dto.setQuantity(product.getQuantity());
         dto.setBrand(product.getBrand());
         dto.setWeight(product.getWeight());
         dto.setSituation(product.getSituation());
