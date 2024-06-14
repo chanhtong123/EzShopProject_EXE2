@@ -1,12 +1,11 @@
 package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.converter.OrderConverter;
-import com.example.EzShopProject_EXE2.dto.CartItemDto;
+import com.example.EzShopProject_EXE2.converter.OrderDetailConverter;
+import com.example.EzShopProject_EXE2.dto.OrderDetailDto;
 import com.example.EzShopProject_EXE2.dto.OrderDto;
 import com.example.EzShopProject_EXE2.dto.analysis.OrderStatsDTO;
-import com.example.EzShopProject_EXE2.dto.analysis.RevenueDayDTO;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
-import com.example.EzShopProject_EXE2.exception.InsufficientQuantityException;
 import com.example.EzShopProject_EXE2.model.*;
 import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
 import com.example.EzShopProject_EXE2.repository.*;
@@ -34,24 +33,45 @@ public class OrderService implements IOrderService {
     private final OrderDetailRepository orderDetailRepository;
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
+    private final OrderDetailConverter orderDetailConverter;
 
     @Override
     public List<OrderDto> findAll() {
         try {
             List<Order> orders = orderRepository.findAll();
-            return orderConverter.toDto(orders);
+            return includeOrderDtoWithOrderDetailDto(orders);
         } catch (Exception e) {
             logger.error("Error finding all orders", e);
-
             throw new RuntimeException("Error finding all orders", e);
         }
     }
 
+    private List<OrderDto> includeOrderDtoWithOrderDetailDto(List<Order> orders) {
+        List<OrderDto> orderDtos = new ArrayList<>();
+
+        for (Order order : orders) {
+            List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.getId());
+            OrderDto orderDto = orderConverter.toDto(order);
+            List<OrderDetailDto> orderDetailDtos = OrderDetailConverter.toDto(orderDetails);
+            orderDto.setCartItems(orderDetailDtos);
+            orderDtos.add(orderDto);
+        }
+        return orderDtos;
+    }
+
+
     @Override
-    public Order findById(long id) {
+    public OrderDto findById(long id) {
         try {
             Optional<Order> order = orderRepository.findById(id);
-            return order.orElse(null);
+            if (order.isPresent()) {
+                List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.get().getId());
+                List<OrderDetailDto> orderDetailDtos = OrderDetailConverter.toDto(orderDetails);
+                OrderDto orderDto = orderConverter.toDto(order.get());
+                orderDto.setCartItems(orderDetailDtos);
+                return orderDto;
+            }
+            return null;
         } catch (Exception e) {
             logger.error("Error finding order by ID", e);
             throw new RuntimeException("Error finding order by ID", e);
@@ -101,7 +121,7 @@ public class OrderService implements IOrderService {
                 Long productId = cartDetail.getProduct().getId();
                 Product product = productRepository.findById(productId)
                         .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + productId));
-
+                orderDetail.setName(product.getName());
                 orderDetail.setPrice(product.getPrice());
                 orderDetail.setProduct(product);
                 orderDetails.add(orderDetail);
@@ -146,7 +166,7 @@ public class OrderService implements IOrderService {
         orderRepository.save(order);
         List<OrderDetail> orderDetails = new ArrayList<>();
         OrderDetail orderDetail;
-        for (CartItemDto cartItemDto : orderDTO.getCartItems()) {
+        for (OrderDetailDto cartItemDto : orderDTO.getCartItems()) {
             orderDetail = new OrderDetail();
             orderDetail.setOrders(order);
             Long productId = cartItemDto.getProductId();
@@ -155,6 +175,7 @@ public class OrderService implements IOrderService {
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + productId));
             orderDetail.setId(orderDetailExisting.getId());
+            orderDetail.setName(orderDetailExisting.getName());
             orderDetail.setPrice(product.getPrice());
             orderDetail.setProduct(product);
             order.setPaymentStatus(orderDTO.getPaymentStatus());
@@ -171,28 +192,21 @@ public class OrderService implements IOrderService {
     public List<OrderDto> findByUserId(Long userId) {
         try {
             List<Order> orders = orderRepository.findByUserId(userId);
-            return orderConverter.toDto(orders);
-        }catch (Exception e) {
+            return includeOrderDtoWithOrderDetailDto(orders);
+        } catch (Exception e) {
             logger.error("Error finding order by ID", e);
             throw new RuntimeException("Error finding order by ID", e);
         }
     }
 
-    private void updateProductQuantities(List<CartItemDto> cartItems) throws DataNotFoundException {
-        for (CartItemDto cartItemDto : cartItems) {
+
+    private void updateProductQuantities(List<OrderDetailDto> cartItems) throws DataNotFoundException {
+        for (OrderDetailDto cartItemDto : cartItems) {
             Long productId = cartItemDto.getProductId();
-            int quantity = cartItemDto.getQuantity();
 
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + productId));
 
-            // Ensure that the quantity to be deducted is not greater than the available quantity
-            if (quantity > product.getQuantity()) {
-                throw new InsufficientQuantityException("Not enough quantity available for product with id: " + productId);
-            }
-
-            int updatedQuantity = product.getQuantity() - quantity;
-            product.setQuantity(updatedQuantity);
             productRepository.save(product);
         }
     }

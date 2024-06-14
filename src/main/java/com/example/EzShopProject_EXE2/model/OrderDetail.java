@@ -20,8 +20,7 @@ public class OrderDetail {
 
     private double price;
 
-    @Column(name = "total_amount")
-    private double totalAmount;
+    private String name;
 
     @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "product_id",nullable = false)

@@ -13,6 +13,7 @@ public class OrderDetailConverter {
         return OrderDetailDto.builder()
                 .id(orderDetail.getId())
                 .price(orderDetail.getPrice())
+                .name(orderDetail.getName())
                 .productId(orderDetail.getId())
                 .build();
     }
@@ -21,6 +22,7 @@ public class OrderDetailConverter {
         return OrderDetail.builder()
                 .id(orderDetailDto.getId())
                 .price(orderDetailDto.getPrice())
+                .name(orderDetailDto.getName())
                 .build();
     }
 
@@ -29,4 +31,5 @@ public class OrderDetailConverter {
                 .map(OrderDetailConverter::toDto)
                 .collect(Collectors.toList());
     }
+
 }

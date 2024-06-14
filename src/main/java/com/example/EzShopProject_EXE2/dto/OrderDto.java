@@ -1,6 +1,7 @@
 package com.example.EzShopProject_EXE2.dto;
 
 
+import com.example.EzShopProject_EXE2.model.OrderDetail;
 import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
 import com.example.EzShopProject_EXE2.model.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -36,8 +37,6 @@ public class OrderDto {
 
     @NotNull(message = "Shop ID cannot be null")
     private Long shopId;
-
-    private Long orderDetailId;
 
     @Min(value = 1, message = "Total money must be >= 0")
     private double totalAmount;
@@ -83,6 +82,6 @@ public class OrderDto {
     private Boolean active;
 
     @JsonProperty("cart_items")
-    private List<CartItemDto> cartItems;
+    private List<OrderDetailDto> cartItems;
 
 }

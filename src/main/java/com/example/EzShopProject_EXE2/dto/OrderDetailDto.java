@@ -18,20 +18,12 @@ import lombok.*;
 public class OrderDetailDto {
     private Long id;
 
-    @Positive(message = "Quantity must be a positive number")
-    private int quantity;
+    private String name;
 
     @PositiveOrZero(message = "Price must be a positive number or zero")
     private double price;
 
-
-    @PositiveOrZero(message = "Total amount must be a positive number or zero")
-    @JsonProperty("total_amount")
-    private double totalAmount;
-
     @NotNull(message = "Product ID cannot be null")
     private Long productId;
 
-    @NotNull(message = "Product ID cannot be null")
-    private Long orderId;
 }

@@ -12,7 +12,7 @@ import java.util.List;
 public interface IOrderService {
     List<OrderDto> findAll();
 
-    Order findById(long id);
+    OrderDto findById(long id);
 
     @Transactional
     Order save(OrderDto orderDto) throws Exception;
