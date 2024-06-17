@@ -12,7 +12,6 @@ public interface IProductService {
  ProductDto updateProduct(Long id, ProductDto productDto) throws Exception;
  List<ProductDto> getAllProduct();
  List<ProductDto> searchProducts(String name, Double minPrice, Double maxPrice, String brand, Integer situation);
- List<ProductDto> getProductsByTitleId(Long titleId);
  ProductDto getProductById(Long id);
 
  List<Product> getAllProductsByShopId(Long shopId);

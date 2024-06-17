@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,9 @@ public class CartDetailService implements ICartDetailService {
     @Override
     public List<CartDetailDto> getCartDetailsByCartId(Long cartId) {
         List<CartDetail> cartDetails = cartDetailRepository.findByCartId(cartId);
+
+        cartDetails.sort(Comparator.comparingLong(CartDetail::getId).reversed());
+
         return cartDetails.stream().map(this::convertToCartDetailDTO).collect(Collectors.toList());
     }
 

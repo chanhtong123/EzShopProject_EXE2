@@ -67,4 +67,27 @@ public class AuthenticationService {
         String username = jwtService.extractUserName(token);
         return repository.findByUserName(username).orElseThrow();
     }
+
+
+    public User updateUser(Long userId, String firstName, String lastName, String email, String phone) {
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (firstName != null) {
+            user.setFirstName(firstName);
+        }
+        if (lastName != null) {
+            user.setLastName(lastName);
+        }
+        if (email != null) {
+            user.setEmail(email);
+        }
+        if (phone != null) {
+            user.setPhone(phone);
+        }
+
+        user.setModifiedDate(new Date());
+
+        return repository.save(user);
+    }
 }

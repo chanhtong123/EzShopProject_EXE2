@@ -15,48 +15,49 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class Product {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-        private String image;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String image;
 
-        private String name;
-        private double price;
-        private String description;
-        private String code;
-        private String status;
-        private String brand;
-        private int weight;
-        private int situation;
-        private String color;
-        private String size;
-        @Column(columnDefinition ="TEXT")
-        private String detail;
+    private String name;
+    private double price;
 
-        private String image2;
-        private String image3;
-        private String image4;
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    private String code;
+    private String status;
+    private String brand;
+    private int weight;
+    private int situation;
+    private String color;
+    private String size;
+    @Column(columnDefinition = "TEXT")
+    private String detail;
+
+    private String image2;
+    private String image3;
+    private String image4;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private Date createdAt = new Date();
 
 
-        @Column(columnDefinition = "TEXT")
-        private String overview;
+    @Column(columnDefinition = "TEXT")
+    private String overview;
 
-        @ManyToMany
-        @JoinTable(name = "product_category",
-                joinColumns = @JoinColumn(name = "product_id"),
-                inverseJoinColumns = @JoinColumn(name = "category_id"))
-        private Set<Category> categories = new HashSet<>();
+    @ManyToMany
+    @JoinTable(name = "product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name ="shop_id")
-            private Shop shop;
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
     @OneToMany(mappedBy = "product")
     private Set<OrderDetail> orderDetails = new HashSet<>();
-    @ManyToOne
-    @JoinColumn(name = "title_id")
-    private Title title;
+
 }

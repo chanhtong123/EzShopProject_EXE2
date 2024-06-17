@@ -2,17 +2,12 @@ package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.dto.CategoryDto;
 import com.example.EzShopProject_EXE2.dto.ProductDto;
-import com.example.EzShopProject_EXE2.dto.ShopDto;
-import com.example.EzShopProject_EXE2.dto.TitleDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.model.Category;
 import com.example.EzShopProject_EXE2.model.Product;
-import com.example.EzShopProject_EXE2.model.Shop;
-import com.example.EzShopProject_EXE2.model.Title;
 import com.example.EzShopProject_EXE2.repository.CategoryRepository;
 import com.example.EzShopProject_EXE2.repository.ProductRepository;
 import com.example.EzShopProject_EXE2.repository.ShopRepository;
-import com.example.EzShopProject_EXE2.repository.TitleRepository;
 import com.example.EzShopProject_EXE2.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,14 +19,12 @@ import java.util.stream.Collectors;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final TitleRepository titleRepository;
     private final ShopRepository shopRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, TitleRepository titleRepository, ShopRepository shopRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ShopRepository shopRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
-        this.titleRepository = titleRepository;
         this.shopRepository = shopRepository;
     }
 
@@ -85,13 +78,7 @@ public class ProductService implements IProductService {
         }
         existingProduct.setCategories(categories);
 
-        // Cập nhật title
-        if (productDto.getTitle() != null) {
-            Title existingTitle = titleRepository.findById(productDto.getTitle().getId())
-                    .orElseThrow(() -> new DataNotFoundException(
-                            "Cannot find title with id: " + productDto.getTitle().getId()));
-            existingProduct.setTitle(existingTitle);
-        }
+
 
         // Lưu sản phẩm đã cập nhật vào cơ sở dữ liệu
         Product updatedProduct = productRepository.save(existingProduct);
@@ -167,10 +154,7 @@ public class ProductService implements IProductService {
         }
 
 
-    public List<ProductDto> getProductsByTitleId(Long titleId) {
-        List<Product> products = productRepository.findByTitleId(titleId);
-        return products.stream().map(this::mapToDto).collect(Collectors.toList());
-    }
+
     public ProductDto getProductById(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
         if (productOptional.isPresent()) {
@@ -212,9 +196,7 @@ public class ProductService implements IProductService {
                 .map(this::mapToCategoryDto)
                 .collect(Collectors.toSet()));
 
-        if (product.getTitle() != null) {
-            productDto.setTitle(mapToTitleDto(product.getTitle()));
-        }
+
         // Add mappings for shop and orderDetails if necessary
         return productDto;
     }
@@ -247,15 +229,6 @@ public class ProductService implements IProductService {
         }
         product.setCategories(categories);
 
-        // Lấy thông tin về title
-        if (productDto.getTitle() != null) {
-            Title existingTitle = titleRepository.findById(productDto.getTitle().getId())
-                    .orElseThrow(() -> new DataNotFoundException(
-                            "Cannot find title with id: " + productDto.getTitle().getId()));
-            product.setTitle(existingTitle);
-        }
-        // Lấy thông tin về cửa hàng
-
         // Add mappings for shop and orderDetails if necessary
         return product;
     }
@@ -272,10 +245,5 @@ public class ProductService implements IProductService {
         return categoryDto;
     }
 
-    private TitleDto mapToTitleDto(Title title) {
-        TitleDto titleDto = new TitleDto();
-        titleDto.setId(title.getId());
-        titleDto.setName(title.getName());
-        return titleDto;
-    }
+
 }

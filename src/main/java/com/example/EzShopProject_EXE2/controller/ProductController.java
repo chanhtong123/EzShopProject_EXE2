@@ -68,11 +68,7 @@ public class ProductController {
         List<ProductDto> products = productService.getAllProduct();
         return ResponseEntity.ok(products);
     }
-    @GetMapping("/getByTitle/{titleId}")
-    public ResponseEntity<List<ProductDto>> getProductsByTitleId(@PathVariable Long titleId) {
-        List<ProductDto> products = productService.getProductsByTitleId(titleId);
-        return ResponseEntity.ok(products);
-    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
         ProductDto productDto = productService.getProductById(id);
