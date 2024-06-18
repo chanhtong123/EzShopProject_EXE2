@@ -1,52 +1,32 @@
-package com.example.EzShopProject_EXE2.dto;
+package com.example.EzShopProject_EXE2.response;
 
-
+import com.example.EzShopProject_EXE2.dto.CartItemDto;
 import com.example.EzShopProject_EXE2.model.OrderDetail;
-import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
 import com.example.EzShopProject_EXE2.model.enums.PaymentStatus;
+import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-
-@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDto {
+public class OrderResponse extends BaseResponse {
     private Long id;
 
-    @NotNull(message = "Order date cannot be null")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime orderDate;
-
-    @NotNull(message = "Order status not null")
-    private OrderStatus orderStatus;
-
-    @NotNull(message = "User ID cannot be null")
-    private Long userId;
-
-    @NotNull(message = "Shop ID cannot be null")
-    private Long shopId;
-
+    @JsonProperty("total_amount")
     @Min(value = 1, message = "Total money must be >= 0")
     private double totalAmount;
 
-    private String customerName;
-
+    @JsonProperty("profit")
     private double profit;
-
-    @NotNull(message = "Payment status not null")
-    private PaymentStatus paymentStatus;
 
     @JsonProperty("payment_method")
     private String paymentMethod;
@@ -54,12 +34,12 @@ public class OrderDto {
     @JsonProperty("shipping_method")
     private String shippingMethod;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("shipping_date")
     private LocalDate shippingDate;
 
     private String notes;
 
-    private String discounts;
 
     @JsonProperty("fullName")
     private String fullName;
@@ -81,7 +61,19 @@ public class OrderDto {
 
     private Boolean active;
 
-    @JsonProperty("cart_items")
-    private List<OrderDetailDto> cartItems;
+    private OrderStatus orderStatus;
 
+    private PaymentStatus paymentStatus;
+
+    @JsonProperty("cart_items")
+    private List<CartItemDto> cartItems;
+
+    private Long couponId;
+
+    @JsonProperty("user_id")
+    @Min(value = 1, message = "User's ID must be > 0")
+    private Long userId;
+
+    @JsonProperty("order_details")
+    private List<OrderDetail> orderDetails;
 }

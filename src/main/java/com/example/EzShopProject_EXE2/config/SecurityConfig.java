@@ -32,6 +32,13 @@ public class SecurityConfig {
                         req->req.requestMatchers("/login/**","/register/**", "/guest/**","/public/**")  //khong can token van vao url duoc
                                 .permitAll()
                                 .requestMatchers("/admin/**").hasAnyAuthority("ADMIN") //role ADMIN
+                                .requestMatchers(
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html",
+                                        "/swagger-resources/**",
+                                        "/webjars/**"
+                                ).permitAll()
                                 .anyRequest()
                                 .authenticated()
 
