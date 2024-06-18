@@ -5,10 +5,10 @@ import com.example.EzShopProject_EXE2.model.Cart;
 import java.util.List;
 import java.util.Optional;
 
-public interface ICartService {
-    Cart createCart(Cart cart);
-    Optional<Cart> getCartById(Long id);
-    List<Cart> getAllCarts();
-    Cart updateCart(Long id, Cart cart);
-    void deleteCart(Long id);
+public interface    ICartService {
+    Cart getCartByUserId(Long userId);
+    Cart getCartByToken(String token);
+
+    Cart createCart(Long id);
+    public Cart getCartById(Long cartId);
 }

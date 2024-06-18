@@ -2,6 +2,7 @@ package com.example.EzShopProject_EXE2.model;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +19,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -26,6 +27,7 @@ public class Cart {
     @Column(nullable = false, updatable = false)
     private Date createdAt = new Date();
 
-    private Long orderId; 
+    private Long orderId;
+
 
 }

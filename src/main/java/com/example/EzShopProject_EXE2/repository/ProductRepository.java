@@ -10,8 +10,8 @@ import javax.swing.text.html.Option;
 import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
+    Product findProductsById(Long productId);
     List<Product> findByShopId(Long shopId);
-    List<Product> findByTitleId(Long titleId);
     List<Product> findByNameContainingAndPriceAndBrand(String name, Double price, String brand);
     List<Product> findByNameContaining(String name);
     List<Product> findByPrice(Double price);

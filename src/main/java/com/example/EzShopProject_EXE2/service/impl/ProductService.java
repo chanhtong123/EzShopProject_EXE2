@@ -2,17 +2,12 @@ package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.dto.CategoryDto;
 import com.example.EzShopProject_EXE2.dto.ProductDto;
-import com.example.EzShopProject_EXE2.dto.ShopDto;
-import com.example.EzShopProject_EXE2.dto.TitleDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.model.Category;
 import com.example.EzShopProject_EXE2.model.Product;
-import com.example.EzShopProject_EXE2.model.Shop;
-import com.example.EzShopProject_EXE2.model.Title;
 import com.example.EzShopProject_EXE2.repository.CategoryRepository;
 import com.example.EzShopProject_EXE2.repository.ProductRepository;
 import com.example.EzShopProject_EXE2.repository.ShopRepository;
-import com.example.EzShopProject_EXE2.repository.TitleRepository;
 import com.example.EzShopProject_EXE2.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,14 +19,12 @@ import java.util.stream.Collectors;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final TitleRepository titleRepository;
     private final ShopRepository shopRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, TitleRepository titleRepository, ShopRepository shopRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ShopRepository shopRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
-        this.titleRepository = titleRepository;
         this.shopRepository = shopRepository;
     }
 
@@ -67,7 +60,6 @@ public class ProductService implements IProductService {
         existingProduct.setPrice(productDto.getPrice());
         existingProduct.setDescription(productDto.getDescription());
         existingProduct.setStatus(productDto.getStatus());
-        existingProduct.setQuantity(productDto.getQuantity());
         existingProduct.setBrand(productDto.getBrand());
         existingProduct.setWeight(productDto.getWeight());
         existingProduct.setSituation((productDto.getSituation()));
@@ -86,13 +78,7 @@ public class ProductService implements IProductService {
         }
         existingProduct.setCategories(categories);
 
-        // Cập nhật title
-        if (productDto.getTitle() != null) {
-            Title existingTitle = titleRepository.findById(productDto.getTitle().getId())
-                    .orElseThrow(() -> new DataNotFoundException(
-                            "Cannot find title with id: " + productDto.getTitle().getId()));
-            existingProduct.setTitle(existingTitle);
-        }
+
 
         // Lưu sản phẩm đã cập nhật vào cơ sở dữ liệu
         Product updatedProduct = productRepository.save(existingProduct);
@@ -133,45 +119,42 @@ public class ProductService implements IProductService {
             products = productRepository.findBySituation(situation);
 
         }  else if (name != null && minPrice != null && maxPrice != null && brand != null && situation != null) {
-                products = productRepository.findByNameContainingAndPriceBetweenAndBrandAndSituation(name, minPrice, maxPrice, brand, situation);
-            } else if (name != null && minPrice != null && maxPrice != null && situation != null) {
-                products = productRepository.findByNameContainingAndPriceBetweenAndSituation(name, minPrice, maxPrice, situation);
-            } else if (name != null && minPrice != null && maxPrice != null) {
-                products = productRepository.findByNameContainingAndPriceBetween(name, minPrice, maxPrice);
-            } else if (name != null && minPrice != null && brand != null) {
-                products = productRepository.findByNameContainingAndPriceGreaterThanEqualAndBrand(name, minPrice, brand);
-            } else if (name != null && minPrice != null && situation != null) {
-                products = productRepository.findByNameContainingAndPriceGreaterThanEqualAndSituation(name, minPrice, situation);
-            } else if (name != null && minPrice != null) {
-                products = productRepository.findByNameContainingAndPriceGreaterThanEqual(name, minPrice);
-            } else if (name != null && maxPrice != null && brand != null && situation != null) {
-                products = productRepository.findByNameContainingAndPriceLessThanEqualAndBrandAndSituation(name, maxPrice, brand, situation);
-            } else if (name != null && maxPrice != null && brand != null) {
-                products = productRepository.findByNameContainingAndPriceLessThanEqualAndBrand(name, maxPrice, brand);
-            } else if (name != null && maxPrice != null && situation != null) {
-                products = productRepository.findByNameContainingAndPriceLessThanEqualAndSituation(name, maxPrice, situation);
-            } else if (name != null && maxPrice != null) {
-                products = productRepository.findByNameContainingAndPriceLessThanEqual(name, maxPrice);
-            } else if (minPrice != null && maxPrice != null && brand != null && situation != null) {
-                products = productRepository.findByPriceBetweenAndBrandAndSituation(minPrice, maxPrice, brand, situation);
-            } else if (minPrice != null && maxPrice != null && brand != null) {
-                products = productRepository.findByPriceBetweenAndBrand(minPrice, maxPrice, brand);
-            } else if (minPrice != null && maxPrice != null && situation != null) {
-                products = productRepository.findByPriceBetweenAndSituation(minPrice, maxPrice, situation);
-            } else if (minPrice != null && maxPrice != null) {
-                products = productRepository.findByPriceBetween(minPrice, maxPrice);
-            } else {
-                products = productRepository.findAll();
-            }
-
-            return products.stream().map(this::mapToDto).collect(Collectors.toList());
+            products = productRepository.findByNameContainingAndPriceBetweenAndBrandAndSituation(name, minPrice, maxPrice, brand, situation);
+        } else if (name != null && minPrice != null && maxPrice != null && situation != null) {
+            products = productRepository.findByNameContainingAndPriceBetweenAndSituation(name, minPrice, maxPrice, situation);
+        } else if (name != null && minPrice != null && maxPrice != null) {
+            products = productRepository.findByNameContainingAndPriceBetween(name, minPrice, maxPrice);
+        } else if (name != null && minPrice != null && brand != null) {
+            products = productRepository.findByNameContainingAndPriceGreaterThanEqualAndBrand(name, minPrice, brand);
+        } else if (name != null && minPrice != null && situation != null) {
+            products = productRepository.findByNameContainingAndPriceGreaterThanEqualAndSituation(name, minPrice, situation);
+        } else if (name != null && minPrice != null) {
+            products = productRepository.findByNameContainingAndPriceGreaterThanEqual(name, minPrice);
+        } else if (name != null && maxPrice != null && brand != null && situation != null) {
+            products = productRepository.findByNameContainingAndPriceLessThanEqualAndBrandAndSituation(name, maxPrice, brand, situation);
+        } else if (name != null && maxPrice != null && brand != null) {
+            products = productRepository.findByNameContainingAndPriceLessThanEqualAndBrand(name, maxPrice, brand);
+        } else if (name != null && maxPrice != null && situation != null) {
+            products = productRepository.findByNameContainingAndPriceLessThanEqualAndSituation(name, maxPrice, situation);
+        } else if (name != null && maxPrice != null) {
+            products = productRepository.findByNameContainingAndPriceLessThanEqual(name, maxPrice);
+        } else if (minPrice != null && maxPrice != null && brand != null && situation != null) {
+            products = productRepository.findByPriceBetweenAndBrandAndSituation(minPrice, maxPrice, brand, situation);
+        } else if (minPrice != null && maxPrice != null && brand != null) {
+            products = productRepository.findByPriceBetweenAndBrand(minPrice, maxPrice, brand);
+        } else if (minPrice != null && maxPrice != null && situation != null) {
+            products = productRepository.findByPriceBetweenAndSituation(minPrice, maxPrice, situation);
+        } else if (minPrice != null && maxPrice != null) {
+            products = productRepository.findByPriceBetween(minPrice, maxPrice);
+        } else {
+            products = productRepository.findAll();
         }
 
-
-    public List<ProductDto> getProductsByTitleId(Long titleId) {
-        List<Product> products = productRepository.findByTitleId(titleId);
         return products.stream().map(this::mapToDto).collect(Collectors.toList());
     }
+
+
+
     public ProductDto getProductById(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
         if (productOptional.isPresent()) {
@@ -199,7 +182,6 @@ public class ProductService implements IProductService {
         productDto.setDescription(product.getDescription());
         productDto.setCode(product.getCode());
         productDto.setStatus(product.getStatus());
-        productDto.setQuantity(product.getQuantity());
         productDto.setBrand(product.getBrand());
         productDto.setWeight(product.getWeight());
         productDto.setSituation(product.getSituation());
@@ -207,13 +189,14 @@ public class ProductService implements IProductService {
         productDto.setColor(product.getColor());
         productDto.setDetail(product.getDetail());
         productDto.setSize(product.getSize());
+        productDto.setImage2(product.getImage2());
+        productDto.setImage3(product.getImage3());
+        productDto.setImage4(product.getImage4());
         productDto.setCategories(product.getCategories().stream()
                 .map(this::mapToCategoryDto)
                 .collect(Collectors.toSet()));
 
-        if (product.getTitle() != null) {
-            productDto.setTitle(mapToTitleDto(product.getTitle()));
-        }
+
         // Add mappings for shop and orderDetails if necessary
         return productDto;
     }
@@ -225,7 +208,6 @@ public class ProductService implements IProductService {
                 .description(productDto.getDescription())
                 .code(productDto.getCode())
                 .status(productDto.getStatus())
-                .quantity(productDto.getQuantity())
                 .brand(productDto.getBrand())
                 .weight(productDto.getWeight())
                 .situation(productDto.getSituation())
@@ -247,21 +229,6 @@ public class ProductService implements IProductService {
         }
         product.setCategories(categories);
 
-        // Lấy thông tin về title
-        if (productDto.getTitle() != null) {
-            Title existingTitle = titleRepository.findById(productDto.getTitle().getId())
-                    .orElseThrow(() -> new DataNotFoundException(
-                            "Cannot find title with id: " + productDto.getTitle().getId()));
-            product.setTitle(existingTitle);
-        }
-        // Lấy thông tin về cửa hàng
-        if (productDto.getShopId() != null) {
-            Shop existingShop = shopRepository.findById(productDto.getShopId().getShopId())
-                    .orElseThrow(() -> new DataNotFoundException(
-                            "Cannot find shop with id: " + productDto.getShopId().getShopId()));
-            product.setShop(existingShop);
-        }
-
         // Add mappings for shop and orderDetails if necessary
         return product;
     }
@@ -278,10 +245,5 @@ public class ProductService implements IProductService {
         return categoryDto;
     }
 
-    private TitleDto mapToTitleDto(Title title) {
-        TitleDto titleDto = new TitleDto();
-        titleDto.setId(title.getId());
-        titleDto.setName(title.getName());
-        return titleDto;
-    }
+
 }

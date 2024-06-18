@@ -22,10 +22,12 @@ public class Product {
 
     private String name;
     private double price;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private String code;
     private String status;
-    private int quantity;
     private String brand;
     private int weight;
     private int situation;
@@ -33,6 +35,10 @@ public class Product {
     private String size;
     @Column(columnDefinition = "TEXT")
     private String detail;
+
+    private String image2;
+    private String image3;
+    private String image4;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
@@ -53,7 +59,5 @@ public class Product {
     private Shop shop;
     @OneToMany(mappedBy = "product")
     private Set<OrderDetail> orderDetails = new HashSet<>();
-    @ManyToOne
-    @JoinColumn(name = "title_id")
-    private Title title;
+
 }

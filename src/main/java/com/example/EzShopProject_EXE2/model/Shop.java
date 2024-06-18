@@ -13,8 +13,8 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class Shop {
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name_shop", length = 500)
     private String nameShop;

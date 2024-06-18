@@ -1,6 +1,8 @@
 package com.example.EzShopProject_EXE2.service.impl;
 
+import com.example.EzShopProject_EXE2.model.Cart;
 import com.example.EzShopProject_EXE2.model.User;
+import com.example.EzShopProject_EXE2.repository.CartRepository;
 import com.example.EzShopProject_EXE2.repository.UserRepository;
 import com.example.EzShopProject_EXE2.response.AuthenticationResponse;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -16,6 +20,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final CartRepository cartRepository;
 
 
     public AuthenticationResponse register(User request){
@@ -37,6 +42,11 @@ public class AuthenticationService {
 
         String token = jwtService.generateToken(user);
 
+        Cart newCart = new Cart();
+        newCart.setUser(user);
+        newCart.setCreatedAt(new Date());
+        cartRepository.save(newCart);
+
         return new AuthenticationResponse(token);
     }
 
@@ -56,5 +66,28 @@ public class AuthenticationService {
     public User getByUser(String token) {
         String username = jwtService.extractUserName(token);
         return repository.findByUserName(username).orElseThrow();
+    }
+
+
+    public User updateUser(Long userId, String firstName, String lastName, String email, String phone) {
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (firstName != null) {
+            user.setFirstName(firstName);
+        }
+        if (lastName != null) {
+            user.setLastName(lastName);
+        }
+        if (email != null) {
+            user.setEmail(email);
+        }
+        if (phone != null) {
+            user.setPhone(phone);
+        }
+
+        user.setModifiedDate(new Date());
+
+        return repository.save(user);
     }
 }

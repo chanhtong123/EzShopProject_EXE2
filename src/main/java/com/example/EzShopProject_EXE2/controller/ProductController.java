@@ -29,7 +29,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-//    @GetMapping("/{id}")
+    //    @GetMapping("/{id}")
 //    public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
 //        try {
 //            Product product = productService.getProductById(id);
@@ -68,11 +68,7 @@ public class ProductController {
         List<ProductDto> products = productService.getAllProduct();
         return ResponseEntity.ok(products);
     }
-    @GetMapping("/getByTitle/{titleId}")
-    public ResponseEntity<List<ProductDto>> getProductsByTitleId(@PathVariable Long titleId) {
-        List<ProductDto> products = productService.getProductsByTitleId(titleId);
-        return ResponseEntity.ok(products);
-    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
         ProductDto productDto = productService.getProductById(id);
@@ -90,19 +86,18 @@ public class ProductController {
         List<ProductResponse> responseList = new ArrayList<>();
         for (Product product : products){
             responseList.add(ProductResponse.builder()
-                            .id(product.getId())
-                            .name(product.getName())
-                            .price(product.getPrice())
-                            .description(product.getDescription())
-                            .code(product.getDescription())
-                            .status(product.getStatus())
-                            .quantity(product.getQuantity())
-                            .brand(product.getBrand())
-                            .weight(product.getWeight())
-                            .situation(product.getSituation())
-                            .color(product.getColor())
-                            .overview(product.getOverview())
-                            .image(product.getImage())
+                    .id(product.getId())
+                    .name(product.getName())
+                    .price(product.getPrice())
+                    .description(product.getDescription())
+                    .code(product.getDescription())
+                    .status(product.getStatus())
+                    .brand(product.getBrand())
+                    .weight(product.getWeight())
+                    .situation(product.getSituation())
+                    .color(product.getColor())
+                    .overview(product.getOverview())
+                    .image(product.getImage())
                     .build());
         }
 
