@@ -2,6 +2,7 @@ package com.example.EzShopProject_EXE2.response;
 
 import com.example.EzShopProject_EXE2.dto.CartItemDto;
 import com.example.EzShopProject_EXE2.model.OrderDetail;
+import com.example.EzShopProject_EXE2.model.enums.PaymentMethod;
 import com.example.EzShopProject_EXE2.model.enums.PaymentStatus;
 import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -29,10 +30,7 @@ public class OrderResponse extends BaseResponse {
     private double profit;
 
     @JsonProperty("payment_method")
-    private String paymentMethod;
-
-    @JsonProperty("shipping_method")
-    private String shippingMethod;
+    private PaymentMethod paymentMethod;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("shipping_date")

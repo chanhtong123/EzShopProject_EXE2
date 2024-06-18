@@ -14,7 +14,10 @@ public interface ICartDetailService {
     Optional<CartDetail> getCartDetailById(Long id);
     List<CartDetail> getAllCartsDetail();
     void deleteCartDetail(Long id);
-    CartDetail createCartDetail( Long productId, Long shopId);
+
+    void deleteAllCartDetail();
+
+    CartDetail createCartDetail(Long productId, Long shopId);
 
 
 }

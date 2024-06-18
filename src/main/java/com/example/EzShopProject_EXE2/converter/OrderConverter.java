@@ -38,7 +38,6 @@ public class OrderConverter {
                 .fullName(order.getFullName())
                 .notes(order.getNotes())
                 .shippingDate(order.getShippingDate())
-                .shippingMethod(order.getShippingMethod())
                 .paymentMethod(order.getPaymentMethod())
                 .customerName(order.getUser().getUsername())
                 .build();
@@ -62,7 +61,6 @@ public class OrderConverter {
                 .fullName(OrderDto.getFullName())
                 .notes(OrderDto.getNotes())
                 .shippingDate(OrderDto.getShippingDate())
-                .shippingMethod(OrderDto.getShippingMethod())
                 .paymentMethod(OrderDto.getPaymentMethod())
                 .totalAmount(OrderDto.getTotalAmount())
                 .profit(OrderDto.getProfit())
@@ -93,7 +91,6 @@ public class OrderConverter {
                 .fullName(order.getFullName())
                 .notes(order.getNotes())
                 .shippingDate(order.getShippingDate())
-                .shippingMethod(order.getShippingMethod())
                 .paymentMethod(order.getPaymentMethod())
                 .totalAmount(order.getTotalAmount())
                 .profit(order.getProfit())

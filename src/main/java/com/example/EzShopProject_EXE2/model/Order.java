@@ -1,5 +1,6 @@
 package com.example.EzShopProject_EXE2.model;
 import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
+import com.example.EzShopProject_EXE2.model.enums.PaymentMethod;
 import com.example.EzShopProject_EXE2.model.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -38,7 +39,7 @@ public class Order extends BaseEntity {
     private double profit;
 
     @Column(name = "payment_method")
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
 
     @Column(name = "province")
     private String province;
@@ -51,9 +52,6 @@ public class Order extends BaseEntity {
 
     @Column(name = "address")
     private String address;
-
-    @Column(name = "shipping_method")
-    private String shippingMethod;
 
     @Column(name = "shipping_date")
     private LocalDate shippingDate;

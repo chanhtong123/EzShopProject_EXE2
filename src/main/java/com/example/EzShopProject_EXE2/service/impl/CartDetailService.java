@@ -6,12 +6,9 @@ import com.example.EzShopProject_EXE2.model.*;
 import com.example.EzShopProject_EXE2.repository.CartDetailRepository;
 import com.example.EzShopProject_EXE2.repository.CartRepository;
 import com.example.EzShopProject_EXE2.repository.ProductRepository;
-import com.example.EzShopProject_EXE2.repository.ShopRepository;
-import com.example.EzShopProject_EXE2.response.ProductResponse;
 import com.example.EzShopProject_EXE2.service.ICartDetailService;
 import com.example.EzShopProject_EXE2.service.ICartService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -97,6 +94,11 @@ public class CartDetailService implements ICartDetailService {
     @Override
     public void deleteCartDetail(Long id) {
         cartDetailRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAllCartDetail() {
+        cartDetailRepository.deleteAll();
     }
 
 //    @Override

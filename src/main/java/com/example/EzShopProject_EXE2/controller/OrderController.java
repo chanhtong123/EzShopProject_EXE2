@@ -4,6 +4,7 @@ import com.example.EzShopProject_EXE2.dto.OrderDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.exception.BadRequestException;
 import com.example.EzShopProject_EXE2.model.Order;
+import com.example.EzShopProject_EXE2.service.ICartDetailService;
 import com.example.EzShopProject_EXE2.service.IOrderService;
 import jakarta.validation.Valid;
 import org.springframework.validation.FieldError;
@@ -19,9 +20,11 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 public class OrderController {
     private final IOrderService orderService;
-
-    public OrderController(IOrderService orderService) {
+    private final ICartDetailService cartDetailService;
+    public OrderController(IOrderService orderService,
+                           ICartDetailService cartDetailService) {
         this.orderService = orderService;
+        this.cartDetailService = cartDetailService;
     }
 
     @GetMapping("/id")
@@ -45,6 +48,7 @@ public class OrderController {
 
         try {
             Order order = orderService.save(orderDto);
+            cartDetailService.deleteAllCartDetail();
             return new ResponseEntity<>(order, HttpStatus.CREATED);
         } catch (DataNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());

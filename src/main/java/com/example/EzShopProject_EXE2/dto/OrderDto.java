@@ -3,6 +3,7 @@ package com.example.EzShopProject_EXE2.dto;
 
 import com.example.EzShopProject_EXE2.model.OrderDetail;
 import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
+import com.example.EzShopProject_EXE2.model.enums.PaymentMethod;
 import com.example.EzShopProject_EXE2.model.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -49,10 +50,7 @@ public class OrderDto {
     private PaymentStatus paymentStatus;
 
     @JsonProperty("payment_method")
-    private String paymentMethod;
-
-    @JsonProperty("shipping_method")
-    private String shippingMethod;
+    private PaymentMethod paymentMethod;
 
     @JsonProperty("shipping_date")
     private LocalDate shippingDate;

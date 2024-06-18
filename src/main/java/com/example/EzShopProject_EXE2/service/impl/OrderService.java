@@ -33,7 +33,6 @@ public class OrderService implements IOrderService {
     private final OrderDetailRepository orderDetailRepository;
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
-    private final OrderDetailConverter orderDetailConverter;
 
     @Override
     public List<OrderDto> findAll() {
@@ -86,14 +85,14 @@ public class OrderService implements IOrderService {
             User user = userRepository.findById(orderDto.getUserId())
                     .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + orderDto.getUserId()));
 
-            Cart cart = cartRepository.findByUserId(orderDto.getUserId())
-                    .orElseThrow(() -> new DataNotFoundException("Cart not found for user id: " + orderDto.getUserId()));
+            Cart cart = cartRepository.findByUserId(orderDto.getUserId());
             // Convert DTO to entity and set relationships
             Order order = orderConverter.toEntity(orderDto);
             order.setUser(user);
             order.setOrderDate(LocalDateTime.now());
             order.setStatus(OrderStatus.Pending);
             order.setPaymentStatus(orderDto.getPaymentStatus());
+            order.setPaymentMethod(orderDto.getPaymentMethod());
 
             LocalDate shippingDate = orderDto.getShippingDate() == null ? LocalDate.now() : orderDto.getShippingDate();
             if (shippingDate.isBefore(LocalDate.now())) {
@@ -163,6 +162,7 @@ public class OrderService implements IOrderService {
         order.setUser(existingUser);
         order.setStatus(orderDTO.getOrderStatus());
         order.setPaymentStatus(orderDTO.getPaymentStatus());
+        order.setPaymentMethod(orderDTO.getPaymentMethod());
         orderRepository.save(order);
         List<OrderDetail> orderDetails = new ArrayList<>();
         OrderDetail orderDetail;
