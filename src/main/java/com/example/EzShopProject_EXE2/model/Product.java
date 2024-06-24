@@ -41,7 +41,7 @@ public class Product {
     private String image4;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, updatable = false)
+//    @Column(nullable = false, updatable = false)
     private Date createdAt = new Date();
 
 
