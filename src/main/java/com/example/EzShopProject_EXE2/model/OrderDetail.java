@@ -22,6 +22,9 @@ public class OrderDetail {
 
     private String name;
 
+    @Column(name = "total_amount")
+    private double totalAmount;
+
     @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "product_id",nullable = false)
     private Product product;

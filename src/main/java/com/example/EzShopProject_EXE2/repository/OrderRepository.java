@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.Month;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public interface OrderRepository extends JpaRepository<Order,Long> {
-    List<Order> findByUserId(Long userId);
-
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    Page<Order> findByUserId(Long userId, Pageable pageable);
 
     @Query("SELECT COUNT(o) FROM Order o")
     long countTotalOrders();
@@ -29,6 +28,18 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
         return percentageChange;
     }
 
+    @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE MONTH(o.orderDate) = MONTH(CURRENT_DATE())")
+    Double findTotalRevenueCurrentMonth();
+
+    @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE MONTH(o.orderDate) = MONTH(CURRENT_DATE()) - 1")
+    Double findTotalRevenueLastMonth();
+
+    @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.orderDate = CURRENT_DATE")
+    Double getTotalAmountToday();
+
+    @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.orderDate = :yesterday")
+    Double getTotalAmountYesterday(@Param("yesterday") LocalDateTime yesterday);
+
     @Query("SELECT COUNT(o) FROM Order o " +
             "WHERE FUNCTION('YEAR', o.orderDate) = FUNCTION('YEAR', CURRENT_DATE) " +
             "AND FUNCTION('MONTH', o.orderDate) = FUNCTION('MONTH', CURRENT_DATE)")
@@ -38,5 +49,4 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
             "WHERE FUNCTION('YEAR', o.orderDate) = FUNCTION('YEAR', CURRENT_DATE) " +
             "AND FUNCTION('MONTH', o.orderDate) = FUNCTION('MONTH', CURRENT_DATE) - 1")
     long countOrdersLastMonth();
-
 }

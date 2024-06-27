@@ -5,6 +5,8 @@ import com.example.EzShopProject_EXE2.converter.OrderDetailConverter;
 import com.example.EzShopProject_EXE2.dto.OrderDetailDto;
 import com.example.EzShopProject_EXE2.dto.OrderDto;
 import com.example.EzShopProject_EXE2.dto.analysis.OrderStatsDTO;
+import com.example.EzShopProject_EXE2.dto.analysis.RevenueDTO;
+import com.example.EzShopProject_EXE2.dto.analysis.RevenueDayDTO;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.model.*;
 import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
@@ -14,6 +16,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,30 +39,23 @@ public class OrderService implements IOrderService {
     private final CartDetailRepository cartDetailRepository;
 
     @Override
-    public List<OrderDto> findAll() {
+    public Page<OrderDto> findAll(Pageable pageable) {
         try {
-            List<Order> orders = orderRepository.findAll();
-            return includeOrderDtoWithOrderDetailDto(orders);
+            Page<Order> orders = orderRepository.findAll(pageable);
+            return orders.map(this::convertToOrderDto);
         } catch (Exception e) {
             logger.error("Error finding all orders", e);
             throw new RuntimeException("Error finding all orders", e);
         }
     }
 
-    private List<OrderDto> includeOrderDtoWithOrderDetailDto(List<Order> orders) {
-        List<OrderDto> orderDtos = new ArrayList<>();
-
-        for (Order order : orders) {
-            List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.getId());
-            OrderDto orderDto = orderConverter.toDto(order);
-            List<OrderDetailDto> orderDetailDtos = OrderDetailConverter.toDto(orderDetails);
-            orderDto.setCartItems(orderDetailDtos);
-            orderDtos.add(orderDto);
-        }
-        return orderDtos;
+    private OrderDto convertToOrderDto(Order order) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.getId());
+        OrderDto orderDto = orderConverter.toDto(order);
+        List<OrderDetailDto> orderDetailDtos = OrderDetailConverter.toDto(orderDetails);
+        orderDto.setCartItems(orderDetailDtos);
+        return orderDto;
     }
-
-
     @Override
     public OrderDto findById(long id) {
         try {
@@ -189,15 +186,16 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<OrderDto> findByUserId(Long userId) {
+    public Page<OrderDto> findByUserId(Long userId, Pageable pageable) {
         try {
-            List<Order> orders = orderRepository.findByUserId(userId);
-            return includeOrderDtoWithOrderDetailDto(orders);
+            Page<Order> orders = orderRepository.findByUserId(userId, pageable);
+            return orders.map(this::convertToOrderDto);
         } catch (Exception e) {
-            logger.error("Error finding order by ID", e);
-            throw new RuntimeException("Error finding order by ID", e);
+            logger.error("Error finding orders by user ID", e);
+            throw new RuntimeException("Error finding orders by user ID", e);
         }
     }
+
 
 
     private void updateProductQuantities(List<OrderDetailDto> cartItems) throws DataNotFoundException {
@@ -211,6 +209,7 @@ public class OrderService implements IOrderService {
         }
     }
 
+    @Override
     public OrderStatsDTO getOrderStats() {
         OrderStatsDTO orderStatsDTO = new OrderStatsDTO();
         long totalOrders = orderRepository.countTotalOrders();
@@ -220,35 +219,39 @@ public class OrderService implements IOrderService {
         return orderStatsDTO;
     }
 
-//    public RevenueDTO getRevenueStatistics() {
-//        Double currentMonthRevenue = orderRepository.findTotalRevenueCurrentMonth();
-//        Double lastMonthRevenue = orderRepository.findTotalRevenueLastMonth();
-//
-//        Double revenueChangePercentage = calculateRevenueChangePercentage(currentMonthRevenue, lastMonthRevenue);
-//
-//        return new RevenueDTO(currentMonthRevenue, lastMonthRevenue, revenueChangePercentage);
-//    }
+    @Override
+    public RevenueDTO getRevenueStatistics() {
+        Double currentMonthRevenue = orderRepository.findTotalRevenueCurrentMonth();
+        Double lastMonthRevenue = orderRepository.findTotalRevenueLastMonth();
 
-    private Double calculateRevenueChangePercentage(Double currentMonthRevenue, Double lastMonthRevenue) {
+        Double revenueChangePercentage = calculateRevenueChangePercentage(currentMonthRevenue, lastMonthRevenue);
+
+        return new RevenueDTO(currentMonthRevenue, lastMonthRevenue, revenueChangePercentage);
+    }
+
+    @Override
+    public Double calculateRevenueChangePercentage(Double currentMonthRevenue, Double lastMonthRevenue) {
         if (lastMonthRevenue == null || lastMonthRevenue == 0) {
-            return currentMonthRevenue == null ? null : 100.0; // Assuming a 100% increase if last month revenue is 0
+            return currentMonthRevenue == null ? null : 100.0;
         }
         return ((currentMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100;
     }
 
-//    public RevenueDayDTO getTotalSales() {
-//        RevenueDayDTO totalSalesDTO = new RevenueDayDTO();
-//        totalSalesDTO.setTotalSalesToday(orderRepository.getTotalAmountToday());
-//        totalSalesDTO.setTotalSalesYesterday(orderRepository.getTotalAmountYesterday());
-//        return totalSalesDTO;
-//    }
-//
-//    @Override
-//    public Integer countOrdersByProductId(Long productId) {
-//        return orderDetailRepository.countOrderByProductId(productId);
-//    }
-//    @Override
-//    public Optional<Double> getProductRevenue(Long productId) {
-//        return orderDetailRepository.findTotalRevenueByProductId(productId);
-//    }
+    @Override
+    public RevenueDayDTO getTotalSales() {
+        RevenueDayDTO totalSalesDTO = new RevenueDayDTO();
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+        totalSalesDTO.setTotalSalesToday(orderRepository.getTotalAmountToday());
+        totalSalesDTO.setTotalSalesYesterday(orderRepository.getTotalAmountYesterday(yesterday));
+        return totalSalesDTO;
+    }
+
+    @Override
+    public Integer countOrdersByProductId(Long productId) {
+        return orderDetailRepository.countOrderByProductId(productId);
+    }
+    @Override
+    public Optional<Double> getProductRevenue(Long productId) {
+        return orderDetailRepository.findTotalRevenueByProductId(productId);
+    }
 }
