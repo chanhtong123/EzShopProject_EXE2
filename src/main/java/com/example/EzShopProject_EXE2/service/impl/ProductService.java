@@ -1,5 +1,7 @@
 package com.example.EzShopProject_EXE2.service.impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.EzShopProject_EXE2.dto.CategoryDto;
 import com.example.EzShopProject_EXE2.dto.ProductDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
@@ -11,7 +13,9 @@ import com.example.EzShopProject_EXE2.repository.ShopRepository;
 import com.example.EzShopProject_EXE2.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,6 +24,8 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ShopRepository shopRepository;
+    @Autowired
+    private Cloudinary cloudinary;
 
     @Autowired
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ShopRepository shopRepository) {
@@ -38,10 +44,31 @@ public class ProductService implements IProductService {
 //    }
 
     @Override
-    public ProductDto createProduct(ProductDto productDto) throws DataNotFoundException {
+    public ProductDto createProduct(ProductDto productDto, MultipartFile[] imageFiles) throws DataNotFoundException {
+        try {
+            // Assuming imageFiles is an array and should be uploaded in sequence
+            if (imageFiles.length > 0) {
+                Map uploadResult1 = cloudinary.uploader().upload(imageFiles[0].getBytes(), ObjectUtils.emptyMap());
+                productDto.setImage(uploadResult1.get("url").toString());
+            }
+            if (imageFiles.length > 1) {
+                Map uploadResult2 = cloudinary.uploader().upload(imageFiles[1].getBytes(), ObjectUtils.emptyMap());
+                productDto.setImage2(uploadResult2.get("url").toString());
+            }
+            if (imageFiles.length > 2) {
+                Map uploadResult3 = cloudinary.uploader().upload(imageFiles[2].getBytes(), ObjectUtils.emptyMap());
+                productDto.setImage3(uploadResult3.get("url").toString());
+            }
+            if (imageFiles.length > 3) {
+                Map uploadResult4 = cloudinary.uploader().upload(imageFiles[3].getBytes(), ObjectUtils.emptyMap());
+                productDto.setImage4(uploadResult4.get("url").toString());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image", e);
+        }
         Product product = mapToEntity(productDto);
 
-        // Tạo mã code cho sản phẩm nếu chưa có
+        // Generate product code if not present
         if (product.getCode() == null || product.getCode().isEmpty()) {
             product.setCode(generateProductCode());
         }
@@ -49,6 +76,7 @@ public class ProductService implements IProductService {
         Product savedProduct = productRepository.save(product);
         return mapToDto(savedProduct);
     }
+
 
     @Override
     public ProductDto updateProduct(Long id, ProductDto productDto) throws Exception {
@@ -215,6 +243,10 @@ public class ProductService implements IProductService {
                 .color(productDto.getColor())
                 .detail(productDto.getDetail())
                 .size(productDto.getSize())
+                .image2(productDto.getImage2())
+                .image3(productDto.getImage3())
+                .image4(productDto.getImage4())
+                .image(productDto.getImage())
                 .build();
 
         // Lấy thông tin về category
