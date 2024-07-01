@@ -22,6 +22,9 @@ public class Shop {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "email", nullable = true)
+    private String email;
+
     @Column(name = "phone_number", length = 10)
     private String phoneNumber;
 

@@ -32,7 +32,7 @@ public class User implements UserDetails {
     @Column(name = "last_name", nullable = true)
     private String lastName;
 
-    @Column(name = "username")
+    @Column(name = "username",  unique = true)
     private String userName;
 
     @Column(name = "password")
@@ -44,7 +44,7 @@ public class User implements UserDetails {
     @Column(name = "phone", unique = true, nullable = true)
     private String phone;
 
-    @Column(name = "image", unique = true, nullable = true)
+    @Column(name = "image", nullable = true)
     private String image;
 
     @Column(name = "dob", nullable = true)

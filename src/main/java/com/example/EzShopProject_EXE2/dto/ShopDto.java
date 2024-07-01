@@ -15,6 +15,7 @@ public class ShopDto {
 
     @NotBlank
     private String address;
+    private String email;
     private String image;
     private String backgroundImage;
 

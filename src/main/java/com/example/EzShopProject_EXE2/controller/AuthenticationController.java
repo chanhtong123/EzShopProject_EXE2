@@ -25,6 +25,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
+
     @GetMapping("/user")
     public ResponseEntity<User> getUserByToken(@RequestHeader("Authorization") String token) {
         if (token.startsWith("Bearer ")) {

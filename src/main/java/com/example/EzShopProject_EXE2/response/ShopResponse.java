@@ -13,6 +13,7 @@ public class ShopResponse {
     private Long shopId;
     private String nameShop;
     private String address;
+    private String email;
     private String phoneNumber;
     private String image;
     private String backgroundImage;
