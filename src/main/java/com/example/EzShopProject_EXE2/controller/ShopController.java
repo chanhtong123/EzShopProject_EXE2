@@ -71,4 +71,18 @@ public class ShopController {
                 .status(shop.isStatus())
                 .build();
     }
+
+
+    @PostMapping("/create-shop")
+    public ResponseEntity<Shop> createShop(@RequestBody Shop shop) {
+        Shop createdShop = iShopService.createShop(shop);
+        return ResponseEntity.ok(createdShop);
+    }
+
+
+    @PatchMapping("/update-shop/{id}")
+    public ResponseEntity<Shop> updateShop(@PathVariable Long id, @RequestBody Shop shop) {
+        Shop updatedShop = iShopService.updateShop(id, shop);
+        return updatedShop != null ? ResponseEntity.ok(updatedShop) : ResponseEntity.notFound().build();
+    }
 }

@@ -14,4 +14,7 @@ public interface IShopService {
 
     List<Shop> getShopByOwnerId(Long ownerId);
 
+    Shop createShop(Shop shop);
+
+    Shop updateShop(Long id, Shop shop);
 }

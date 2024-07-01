@@ -28,10 +28,10 @@ public class Shop {
     @Column(name = "phone_number", length = 10)
     private String phoneNumber;
 
-    @Column(name = "image")
+    @Column(name = "image", nullable = true)
     private String image;
 
-    @Column(name = "background_image")
+    @Column(name = "background_image", nullable = true)
     private String backgroundImage;
 
     @Column(name = "wallet")
