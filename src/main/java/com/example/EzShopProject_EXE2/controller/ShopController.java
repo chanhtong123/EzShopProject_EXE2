@@ -44,4 +44,31 @@ public class ShopController {
         return ResponseEntity.ok(responseList);
     }
 
+    @GetMapping("/public/shop/byOwner/{ownerId}")
+    public ResponseEntity<?> getShopsByOwnerId(@PathVariable Long ownerId) {
+        List<Shop> shops = iShopService.getShopByOwnerId(ownerId);
+        if (shops.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            List<ShopResponse> shopResponses = new ArrayList<>();
+            for (Shop shop : shops) {
+                shopResponses.add(mapToShopResponse(shop));
+            }
+            return ResponseEntity.ok(shopResponses);
+        }
+    }
+
+
+    private ShopResponse mapToShopResponse(Shop shop) {
+        return ShopResponse.builder()
+                .shopId(shop.getId())
+                .nameShop(shop.getNameShop())
+                .address(shop.getAddress())
+                .phoneNumber(shop.getPhoneNumber())
+                .image(shop.getImage())
+                .backgroundImage(shop.getBackgroundImage())
+                .wallet(shop.getWallet())
+                .status(shop.isStatus())
+                .build();
+    }
 }

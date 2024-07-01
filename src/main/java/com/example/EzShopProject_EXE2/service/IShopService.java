@@ -12,4 +12,6 @@ public interface IShopService {
 
     List<Shop> getAllShop();
 
+    List<Shop> getShopByOwnerId(Long ownerId);
+
 }

@@ -32,4 +32,9 @@ public class ShopService implements IShopService {
     public List<Shop> getAllShop() {
         return  shopRepository.findAll();
     }
+
+    @Override
+    public List<Shop> getShopByOwnerId(Long ownerId) {
+        return shopRepository.findByOwnerId(ownerId);
+    }
 }
