@@ -64,6 +64,7 @@ public class ShopController {
                 .shopId(shop.getId())
                 .nameShop(shop.getNameShop())
                 .address(shop.getAddress())
+                .email(shop.getEmail())
                 .phoneNumber(shop.getPhoneNumber())
                 .image(shop.getImage())
                 .backgroundImage(shop.getBackgroundImage())
