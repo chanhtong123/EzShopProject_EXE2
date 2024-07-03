@@ -254,4 +254,15 @@ public class OrderService implements IOrderService {
     public Optional<Double> getProductRevenue(Long productId) {
         return orderDetailRepository.findTotalRevenueByProductId(productId);
     }
+
+    @Override
+    public Page<OrderDto> findByShopId(Long shopId, Pageable pageable) {
+            try {
+                Page<Order> orders = orderRepository.findByUserId(shopId, pageable);
+                return orders.map(this::convertToOrderDto);
+            } catch (Exception e) {
+                logger.error("Error finding orders by user ID", e);
+                throw new RuntimeException("Error finding orders by user ID", e);
+            }
+        }
 }

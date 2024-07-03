@@ -42,4 +42,6 @@ public interface IOrderService {
     Integer countOrdersByProductId(Long productId);
 
     Optional<Double> getProductRevenue(Long productId);
+
+    Page<OrderDto> findByShopId(Long shopId, Pageable pageable);
 }

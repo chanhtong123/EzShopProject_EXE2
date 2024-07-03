@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findByUserId(Long userId, Pageable pageable);
 
+    Page<Order> findByShopId(Long shopId, Pageable pageable);
+
     @Query("SELECT COUNT(o) FROM Order o")
     long countTotalOrders();
 
@@ -49,4 +51,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "WHERE FUNCTION('YEAR', o.orderDate) = FUNCTION('YEAR', CURRENT_DATE) " +
             "AND FUNCTION('MONTH', o.orderDate) = FUNCTION('MONTH', CURRENT_DATE) - 1")
     long countOrdersLastMonth();
+
+
 }

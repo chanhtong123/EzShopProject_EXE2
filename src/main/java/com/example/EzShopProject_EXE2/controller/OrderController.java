@@ -109,7 +109,7 @@ public class OrderController {
     }
 
     @GetMapping("/user-id")
-    public ResponseEntity<?> getOrders(
+    public ResponseEntity<?> getOrdersByUserId(
             @Valid @RequestParam("user_id") Long userId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -166,6 +166,20 @@ public class OrderController {
             productRevenueDto.setTotalRevenue(0.0); // Set total revenue to 0
             productRevenueDto.setProductId(productId);
             return ResponseEntity.ok(productRevenueDto);
+        }
+    }
+
+    @GetMapping("/shop-id")
+    public ResponseEntity<?> getOrdersByShopId(
+            @Valid @RequestParam("shop_id") Long shopId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<OrderDto> orders = orderService.findByShopId(shopId, pageable);
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new BadRequestException("Failed to get orders for user: " + e.getMessage());
         }
     }
 }
