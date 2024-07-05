@@ -4,10 +4,13 @@ import com.example.EzShopProject_EXE2.dto.ProductDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 
 import com.example.EzShopProject_EXE2.model.Product;
+import com.example.EzShopProject_EXE2.model.Shop;
+import com.example.EzShopProject_EXE2.model.User;
+import com.example.EzShopProject_EXE2.repository.ShopRepository;
+import com.example.EzShopProject_EXE2.repository.UserRepository;
 import com.example.EzShopProject_EXE2.response.ProductResponse;
 import com.example.EzShopProject_EXE2.service.IProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +19,26 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/guest/api/products")
+@RequestMapping("/api/products")
 @CrossOrigin
 public class ProductController {
 
     private final IProductService productService;
 
+    private final UserRepository userRepository;
+    private final ShopRepository shopRepository;
+
 
     @Autowired
-    public ProductController(IProductService productService) {
+    public ProductController(IProductService productService, UserRepository userRepository, ShopRepository shopRepository) {
         this.productService = productService;
+        this.userRepository = userRepository;
+        this.shopRepository = shopRepository;
     }
 
     //    @GetMapping("/{id}")
@@ -49,15 +58,31 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(
             @RequestPart("product") String productJson,
-            @RequestPart("imageFiles") MultipartFile[] imageFiles) throws DataNotFoundException {
+            @RequestPart("imageFiles") MultipartFile[] imageFiles,
+            Principal principal) throws DataNotFoundException {
         ObjectMapper objectMapper = new ObjectMapper();
         ProductDto productDto;
         try {
             productDto = objectMapper.readValue(productJson, ProductDto.class);
+            System.out.println("Received Product Data: " + productDto.toString());
         } catch (IOException e) {
             throw new RuntimeException("Invalid JSON format", e);
         }
-        ProductDto createdProduct = productService.createProduct(productDto, imageFiles);
+        for (MultipartFile file : imageFiles) {
+            System.out.println("Received Image: " + file.getOriginalFilename());
+        }
+
+        String username = principal.getName();
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+
+        List<Shop> shops = shopRepository.findByOwnerId(user.getId());
+        if (shops.isEmpty()) {
+            throw new DataNotFoundException("Shop not found for user: " + username);
+        }
+        Shop shop = shops.get(0); // Assuming one shop per owner
+
+        ProductDto createdProduct = productService.createProduct(productDto, imageFiles, shop.getId());
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 

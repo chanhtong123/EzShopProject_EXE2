@@ -46,7 +46,7 @@ public class ProductDto {
     private Set<CategoryDto> categories = new HashSet<>();
 
     private Shop shop;
-
+    private Long shopId;
     @JsonProperty("order_details")
     private Set<OrderDetailDto> orderDetails = new HashSet<>();
 

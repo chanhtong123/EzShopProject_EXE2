@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IProductService {
  // Product getProductById(long id) throws Exception;
- ProductDto createProduct(ProductDto productDto, MultipartFile[] imageFiles) throws DataNotFoundException;
+ ProductDto createProduct(ProductDto productDto, MultipartFile[] imageFiles,  Long shopId) throws DataNotFoundException;
  ProductDto updateProduct(Long id, ProductDto productDto) throws Exception;
  List<ProductDto> getAllProduct();
  List<ProductDto> searchProducts(String name, Double minPrice, Double maxPrice, String brand, Integer situation);

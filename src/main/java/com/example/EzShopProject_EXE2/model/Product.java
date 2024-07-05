@@ -57,6 +57,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
+
     @OneToMany(mappedBy = "product")
     private Set<OrderDetail> orderDetails = new HashSet<>();
 

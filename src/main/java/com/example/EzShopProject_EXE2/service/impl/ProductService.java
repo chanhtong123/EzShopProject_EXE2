@@ -7,6 +7,7 @@ import com.example.EzShopProject_EXE2.dto.ProductDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.model.Category;
 import com.example.EzShopProject_EXE2.model.Product;
+import com.example.EzShopProject_EXE2.model.Shop;
 import com.example.EzShopProject_EXE2.repository.CategoryRepository;
 import com.example.EzShopProject_EXE2.repository.ProductRepository;
 import com.example.EzShopProject_EXE2.repository.ShopRepository;
@@ -44,7 +45,7 @@ public class ProductService implements IProductService {
 //    }
 
     @Override
-    public ProductDto createProduct(ProductDto productDto, MultipartFile[] imageFiles) throws DataNotFoundException {
+    public ProductDto createProduct(ProductDto productDto, MultipartFile[] imageFiles,  Long shopId) throws DataNotFoundException {
         try {
             // Assuming imageFiles is an array and should be uploaded in sequence
             if (imageFiles.length > 0) {
@@ -66,8 +67,14 @@ public class ProductService implements IProductService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload image", e);
         }
-        Product product = mapToEntity(productDto);
+        List<Shop> shops = shopRepository.findByOwnerId(shopId);
+        if (shops.isEmpty()) {
+            throw new DataNotFoundException("Cannot find shop with owner id: " + shopId);
+        }
+        Shop shop = shops.get(0); // Assuming one shop per owner
 
+        Product product = mapToEntity(productDto,shopId);
+//        product.setShop(shop);
         // Generate product code if not present
         if (product.getCode() == null || product.getCode().isEmpty()) {
             product.setCode(generateProductCode());
@@ -223,13 +230,14 @@ public class ProductService implements IProductService {
         productDto.setCategories(product.getCategories().stream()
                 .map(this::mapToCategoryDto)
                 .collect(Collectors.toSet()));
+        productDto.setShopId(product.getShop().getId());
 
 
         // Add mappings for shop and orderDetails if necessary
         return productDto;
     }
 
-    private Product mapToEntity(ProductDto productDto) throws DataNotFoundException {
+    private Product mapToEntity(ProductDto productDto,Long shopId) throws DataNotFoundException {
         Product product = Product.builder()
                 .name(productDto.getName())
                 .price(productDto.getPrice())
@@ -248,7 +256,11 @@ public class ProductService implements IProductService {
                 .image4(productDto.getImage4())
                 .image(productDto.getImage())
                 .build();
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new DataNotFoundException("Shop not found with id: " + shopId));
 
+        // Liên kết Product với Shop
+        product.setShop(shop);
         // Lấy thông tin về category
         Set<Category> categories = new HashSet<>();
         for (CategoryDto categoryDto : productDto.getCategories()) {

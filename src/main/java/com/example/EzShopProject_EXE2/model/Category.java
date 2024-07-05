@@ -23,5 +23,6 @@ public class Category {
     private String name;
 
     @ManyToMany(mappedBy = "categories")
+    @JsonManagedReference
     private Set<Product> products = new HashSet<>();
 }
