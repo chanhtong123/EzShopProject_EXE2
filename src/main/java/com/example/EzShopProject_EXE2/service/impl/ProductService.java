@@ -67,11 +67,11 @@ public class ProductService implements IProductService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload image", e);
         }
-        List<Shop> shops = shopRepository.findByOwnerId(shopId);
-        if (shops.isEmpty()) {
-            throw new DataNotFoundException("Cannot find shop with owner id: " + shopId);
-        }
-        Shop shop = shops.get(0); // Assuming one shop per owner
+//        List<Shop> shops = shopRepository.findByOwnerId(shopId);
+//        if (shops.isEmpty()) {
+//            throw new DataNotFoundException("Cannot find shop with owner id: " + shopId);
+//        }
+//        Shop shop = shops.get(0); // Assuming one shop per owner
 
         Product product = mapToEntity(productDto,shopId);
 //        product.setShop(shop);
