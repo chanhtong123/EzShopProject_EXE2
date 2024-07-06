@@ -4,9 +4,9 @@ import com.example.EzShopProject_EXE2.converter.OrderConverter;
 import com.example.EzShopProject_EXE2.converter.OrderDetailConverter;
 import com.example.EzShopProject_EXE2.dto.OrderDetailDto;
 import com.example.EzShopProject_EXE2.dto.OrderDto;
-import com.example.EzShopProject_EXE2.dto.analysis.OrderStatsDTO;
-import com.example.EzShopProject_EXE2.dto.analysis.RevenueDTO;
-import com.example.EzShopProject_EXE2.dto.analysis.RevenueDayDTO;
+import com.example.EzShopProject_EXE2.dto.analysis.OrderStatsDto;
+import com.example.EzShopProject_EXE2.dto.analysis.RevenueDto;
+import com.example.EzShopProject_EXE2.dto.analysis.RevenueDayDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.model.*;
 import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
@@ -210,8 +210,8 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderStatsDTO getOrderStats() {
-        OrderStatsDTO orderStatsDTO = new OrderStatsDTO();
+    public OrderStatsDto getOrderStats() {
+        OrderStatsDto orderStatsDTO = new OrderStatsDto();
         long totalOrders = orderRepository.countTotalOrders();
         orderStatsDTO.setTotalOrders(totalOrders);
         double orderChangePercentage = orderRepository.calculateOrderChange();
@@ -219,14 +219,15 @@ public class OrderService implements IOrderService {
         return orderStatsDTO;
     }
 
+
     @Override
-    public RevenueDTO getRevenueStatistics() {
+    public RevenueDto getRevenueStatistics() {
         Double currentMonthRevenue = orderRepository.findTotalRevenueCurrentMonth();
         Double lastMonthRevenue = orderRepository.findTotalRevenueLastMonth();
 
         Double revenueChangePercentage = calculateRevenueChangePercentage(currentMonthRevenue, lastMonthRevenue);
 
-        return new RevenueDTO(currentMonthRevenue, lastMonthRevenue, revenueChangePercentage);
+        return new RevenueDto(currentMonthRevenue, lastMonthRevenue, revenueChangePercentage);
     }
 
     @Override
@@ -238,8 +239,8 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public RevenueDayDTO getTotalSales() {
-        RevenueDayDTO totalSalesDTO = new RevenueDayDTO();
+    public RevenueDayDto getTotalSales() {
+        RevenueDayDto totalSalesDTO = new RevenueDayDto();
         LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
         totalSalesDTO.setTotalSalesToday(orderRepository.getTotalAmountToday());
         totalSalesDTO.setTotalSalesYesterday(orderRepository.getTotalAmountYesterday(yesterday));

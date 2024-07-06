@@ -123,20 +123,20 @@ public class OrderController {
     }
 
     @GetMapping("/total-order")
-    public ResponseEntity<OrderStatsDTO> getOrderStats() {
-        OrderStatsDTO orderStatsDTO = orderService.getOrderStats();
+    public ResponseEntity<OrderStatsDto> getOrderStats() {
+        OrderStatsDto orderStatsDTO = orderService.getOrderStats();
         return ResponseEntity.ok(orderStatsDTO);
     }
 
     @GetMapping("/total-revenue")
-    public ResponseEntity<RevenueDTO> getRevenueStatistics() {
-        RevenueDTO revenueDTO = orderService.getRevenueStatistics();
+    public ResponseEntity<RevenueDto> getRevenueStatistics() {
+        RevenueDto revenueDTO = orderService.getRevenueStatistics();
         return ResponseEntity.ok(revenueDTO);
     }
 
     @GetMapping("/total-revenue-day")
-    public ResponseEntity<RevenueDayDTO> getTotalSales() {
-        RevenueDayDTO totalSalesDTO = orderService.getTotalSales();
+    public ResponseEntity<RevenueDayDto> getTotalSales() {
+        RevenueDayDto totalSalesDTO = orderService.getTotalSales();
         String formattedTotalSalesToday = totalSalesDTO.getFormattedTotalSalesToday();
         String formattedTotalSalesYesterday = totalSalesDTO.getFormattedTotalSalesYesterday();
         totalSalesDTO.setTotalSalesToday(formattedTotalSalesToday != null ? Double.valueOf(formattedTotalSalesToday) : null);
@@ -156,17 +156,14 @@ public class OrderController {
     @GetMapping("/revenue/{productId}")
     public ResponseEntity<ProductRevenueDto> getProductRevenue(@PathVariable Long productId) {
         Optional<Double> revenue = orderService.getProductRevenue(productId);
+        ProductRevenueDto productRevenueDto = new ProductRevenueDto();
         if (revenue.isPresent()) {
-            ProductRevenueDto productRevenueDto = new ProductRevenueDto();
             productRevenueDto.setTotalRevenue(revenue.get());
-            productRevenueDto.setProductId(productId);
-            return ResponseEntity.ok(productRevenueDto);
         } else {
-            ProductRevenueDto productRevenueDto = new ProductRevenueDto();
             productRevenueDto.setTotalRevenue(0.0); // Set total revenue to 0
-            productRevenueDto.setProductId(productId);
-            return ResponseEntity.ok(productRevenueDto);
         }
+        productRevenueDto.setProductId(productId);
+        return ResponseEntity.ok(productRevenueDto);
     }
 
     @GetMapping("/shop-id")

@@ -1,9 +1,9 @@
 package com.example.EzShopProject_EXE2.service;
 
 import com.example.EzShopProject_EXE2.dto.OrderDto;
-import com.example.EzShopProject_EXE2.dto.analysis.OrderStatsDTO;
-import com.example.EzShopProject_EXE2.dto.analysis.RevenueDTO;
-import com.example.EzShopProject_EXE2.dto.analysis.RevenueDayDTO;
+import com.example.EzShopProject_EXE2.dto.analysis.OrderStatsDto;
+import com.example.EzShopProject_EXE2.dto.analysis.RevenueDto;
+import com.example.EzShopProject_EXE2.dto.analysis.RevenueDayDto;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.model.Order;
 import jakarta.transaction.Transactional;
@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 
-import java.util.List;
 import java.util.Optional;
 
 public interface IOrderService {
@@ -31,13 +30,13 @@ public interface IOrderService {
 
     Page<OrderDto> findByUserId(Long userId, Pageable pageable);
 
-    OrderStatsDTO getOrderStats();
+    OrderStatsDto getOrderStats();
 
-    RevenueDTO getRevenueStatistics();
+    RevenueDto getRevenueStatistics();
 
     Double calculateRevenueChangePercentage(Double currentMonthRevenue, Double lastMonthRevenue);
 
-    RevenueDayDTO getTotalSales();
+    RevenueDayDto getTotalSales();
 
     Integer countOrdersByProductId(Long productId);
 

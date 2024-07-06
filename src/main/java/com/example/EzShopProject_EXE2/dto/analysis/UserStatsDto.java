@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserStatsDTO {
+public class UserStatsDto {
     private Long usersThisMonth;
     private Long usersLastMonth;
     private double percentageChange;

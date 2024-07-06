@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderStatsDTO {
+public class OrderStatsDto {
     private long totalOrders;
     private double orderChangePercentage;
 

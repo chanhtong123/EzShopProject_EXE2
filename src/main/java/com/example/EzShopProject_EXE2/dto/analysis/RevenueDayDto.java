@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RevenueDayDTO {
+public class RevenueDayDto {
     private Double totalSalesToday;
     private Double totalSalesYesterday;
     public String getFormattedTotalSalesToday() {
