@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -265,4 +266,29 @@ public class OrderService implements IOrderService {
                 throw new RuntimeException("Error finding orders by user ID", e);
             }
         }
+
+    @Override
+    public List<OrderDto> findOrdersByOrderDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Order> orders = orderRepository.findOrdersByOrderDateBetween(startDate, endDate);
+        return orders.stream().map(order -> OrderDto.builder()
+                .id(order.getId())
+                .orderDate(order.getOrderDate())
+                .shopId(order.getShopId())
+                .totalAmount(order.getTotalAmount())
+                .profit(order.getProfit())
+                .paymentMethod(order.getPaymentMethod())
+                .province(order.getProvince())
+                .district(order.getDistrict())
+                .ward(order.getWard())
+                .address(order.getAddress())
+                .shippingDate(order.getShippingDate())
+                .notes(order.getNotes())
+                .fullName(order.getFullName())
+                .email(order.getEmail())
+                .phoneNumber(order.getPhoneNumber())
+                .active(order.getActive())
+                .orderStatus(order.getStatus())
+                .paymentStatus(order.getPaymentStatus())
+                .build()).collect(Collectors.toList());
+    }
 }

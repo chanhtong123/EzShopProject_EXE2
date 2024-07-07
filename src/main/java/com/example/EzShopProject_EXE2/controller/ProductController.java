@@ -146,4 +146,13 @@ public class ProductController {
 
         return ResponseEntity.ok(responseList);
     }
+
+    @GetMapping("/products/{shopId}")
+    public ResponseEntity<Integer> getTotalProductsByShopId(@PathVariable Long shopId) {
+        List<Product> products = productService.getAllProductsByShopId(shopId);
+        int totalProducts = products.size();
+        return ResponseEntity.ok(totalProducts);
+    }
+
+
 }

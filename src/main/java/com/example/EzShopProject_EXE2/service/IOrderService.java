@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +43,9 @@ public interface IOrderService {
     Integer countOrdersByProductId(Long productId);
 
     Optional<Double> getProductRevenue(Long productId);
+
+    List<OrderDto> findOrdersByOrderDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+
 
     Page<OrderDto> findByShopId(Long shopId, Pageable pageable);
 }
