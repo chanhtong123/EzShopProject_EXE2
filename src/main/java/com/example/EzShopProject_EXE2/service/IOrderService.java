@@ -6,6 +6,7 @@ import com.example.EzShopProject_EXE2.dto.analysis.RevenueDTO;
 import com.example.EzShopProject_EXE2.dto.analysis.RevenueDayDTO;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.model.Order;
+import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,4 +49,6 @@ public interface IOrderService {
 
 
     Page<OrderDto> findByShopId(Long shopId, Pageable pageable);
+
+    OrderDto updateOrderStatus(Long id, OrderStatus status) throws DataNotFoundException;
 }

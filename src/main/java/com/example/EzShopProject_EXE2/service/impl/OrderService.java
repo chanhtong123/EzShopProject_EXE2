@@ -268,6 +268,15 @@ public class OrderService implements IOrderService {
         }
 
     @Override
+    public OrderDto updateOrderStatus(Long id, OrderStatus status) throws DataNotFoundException {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Order not found"));
+        order.setStatus(status);
+        orderRepository.save(order);
+        return orderConverter.toDto(order);
+    }
+
+    @Override
     public List<OrderDto> findOrdersByOrderDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
         List<Order> orders = orderRepository.findOrdersByOrderDateBetween(startDate, endDate);
         return orders.stream().map(order -> OrderDto.builder()

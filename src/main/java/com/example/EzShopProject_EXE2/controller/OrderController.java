@@ -5,6 +5,7 @@ import com.example.EzShopProject_EXE2.dto.analysis.*;
 import com.example.EzShopProject_EXE2.exception.DataNotFoundException;
 import com.example.EzShopProject_EXE2.exception.BadRequestException;
 import com.example.EzShopProject_EXE2.model.Order;
+import com.example.EzShopProject_EXE2.model.enums.OrderStatus;
 import com.example.EzShopProject_EXE2.service.ICartDetailService;
 import com.example.EzShopProject_EXE2.service.IOrderService;
 import jakarta.validation.Valid;
@@ -186,7 +187,7 @@ public class OrderController {
     }
 
 
-    @GetMapping("/orders/date-range")
+    @GetMapping("/date-range")
     public ResponseEntity<List<OrderDto>> getOrdersByDateRange(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
@@ -194,5 +195,9 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
-
+    @PutMapping("/{id}/status")
+    public ResponseEntity<OrderDto> updateOrderStatus(@PathVariable Long id, @RequestParam OrderStatus status) throws DataNotFoundException {
+        OrderDto updatedOrder = orderService.updateOrderStatus(id, status);
+        return ResponseEntity.ok(updatedOrder);
+    }
 }
