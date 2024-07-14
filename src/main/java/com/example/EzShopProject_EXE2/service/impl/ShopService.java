@@ -1,10 +1,10 @@
 package com.example.EzShopProject_EXE2.service.impl;
 
 import com.example.EzShopProject_EXE2.model.Shop;
+import com.example.EzShopProject_EXE2.repository.ProductRepository;
 import com.example.EzShopProject_EXE2.repository.ShopRepository;
-import com.example.EzShopProject_EXE2.request.shop.ShopSearchRequest;
 import com.example.EzShopProject_EXE2.service.IShopService;
-import jdk.jshell.spi.ExecutionControlProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+
 @Service
 public class ShopService implements IShopService {
 
     private final ShopRepository shopRepository;
+    private ProductRepository productRepository;
+
 
     @Autowired
-    public ShopService(ShopRepository shopRepository) {
+    public ShopService(ShopRepository shopRepository,ProductRepository productRepository) {
         this.shopRepository = shopRepository;
+        this.productRepository = productRepository;
     }
 
 
@@ -80,5 +85,11 @@ public class ShopService implements IShopService {
             return shopRepository.save(shop);
         }
         return null;
+    }
+
+
+    @Override
+    public Optional<Shop> getShopByProductId(Long productId) {
+        return productRepository.findShopByProductId(productId);
     }
 }

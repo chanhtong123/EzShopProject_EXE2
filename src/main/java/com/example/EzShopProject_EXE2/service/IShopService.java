@@ -17,4 +17,8 @@ public interface IShopService {
     Shop createShop(Shop shop);
 
     Shop updateShop(Long id, Shop shop);
+
+    Optional<Shop> getShopByProductId(Long productId);
+
+
 }

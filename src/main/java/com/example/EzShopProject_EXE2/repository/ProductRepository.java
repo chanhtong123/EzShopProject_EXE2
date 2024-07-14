@@ -1,6 +1,7 @@
 package com.example.EzShopProject_EXE2.repository;
 
 import com.example.EzShopProject_EXE2.model.Product;
+import com.example.EzShopProject_EXE2.model.Shop;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
     Product findProductsById(Long productId);
@@ -44,6 +47,8 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findByPriceBetweenAndSituation(Double minPrice, Double maxPrice, Integer situation);
     List<Product> findByPriceBetween(Double minPrice, Double maxPrice);
 
+    @Query("SELECT p.shop FROM Product p WHERE p.id = :productId")
+    Optional<Shop> findShopByProductId(@Param("productId") Long productId);
 
 
 }
