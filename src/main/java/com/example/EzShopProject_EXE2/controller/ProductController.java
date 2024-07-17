@@ -153,7 +153,21 @@ public class ProductController {
         int totalProducts = products.size();
         return ResponseEntity.ok(totalProducts);
     }
+    @GetMapping("/shop")
+    public ResponseEntity<List<ProductDto>> getProductsByShop(Principal principal) throws DataNotFoundException {
+        String username = principal.getName();
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
 
+        List<Shop> shops = shopRepository.findByOwnerId(user.getId());
+        if (shops.isEmpty()) {
+            throw new DataNotFoundException("Shop not found for user: " + username);
+        }
+        Shop shop = shops.get(0); // Assuming one shop per owner
+
+        List<ProductDto> products = productService.getProductsByShopId(shop.getId());
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
 
 
 }

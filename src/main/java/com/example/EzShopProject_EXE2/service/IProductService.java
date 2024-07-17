@@ -16,4 +16,5 @@ public interface IProductService {
  ProductDto getProductById(Long id);
 
  List<Product> getAllProductsByShopId(Long shopId);
+ List<ProductDto> getProductsByShopId(Long shopId);
 }

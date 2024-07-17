@@ -188,7 +188,11 @@ public class ProductService implements IProductService {
         return products.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-
+    @Override
+    public List<ProductDto> getProductsByShopId(Long shopId) {
+        List<Product> products = productRepository.findByShopId(shopId);
+        return products.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
 
     public ProductDto getProductById(Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
@@ -278,9 +282,22 @@ public class ProductService implements IProductService {
     }
 
     private String generateProductCode() {
-        // Sử dụng UUID để tạo mã code duy nhất cho sản phẩm
-        return "PRD-" + UUID.randomUUID().toString();
+        // Tạo 3 chữ cái ngẫu nhiên viết hoa
+        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 3; i++) {
+            char randomChar = letters.charAt(random.nextInt(letters.length()));
+            sb.append(randomChar);
+        }
+
+        // Tạo 4 số ngẫu nhiên
+        int randomNumber = random.nextInt(10000); // Số ngẫu nhiên từ 0 đến 9999
+
+        // Format kết quả và trả về
+        return sb.toString() + String.format("%04d", randomNumber);
     }
+
 
     private CategoryDto mapToCategoryDto(Category category) {
         CategoryDto categoryDto = new CategoryDto();
