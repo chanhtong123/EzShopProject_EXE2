@@ -13,19 +13,20 @@
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3333/EzShop
-    username: root
-    password: 12345
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
+    url: jdbc:sqlserver://ez-shop.database.windows.net:1433;database=EzShop;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: CloudSA21aa3525@ez-shop
+    password: AnHy221202
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    jpa:
       hibernate:
-        format_sql: true
-      database: mysql
-      database-platform: org.hibernate.dialect.MySQL8Dialect
+        ddl-auto: update
+      show-sql: false
+      properties:
+        hibernate:
+          format_sql: true
+        database: mssql
+        database-platform: org.hibernate.dialect.SQLServer2022Dialect
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
