@@ -259,7 +259,7 @@ public class OrderService implements IOrderService {
     @Override
     public Page<OrderDto> findByShopId(Long shopId, Pageable pageable) {
             try {
-                Page<Order> orders = orderRepository.findByUserId(shopId, pageable);
+                Page<Order> orders = orderRepository.findByShopId(shopId, pageable);
                 return orders.map(this::convertToOrderDto);
             } catch (Exception e) {
                 logger.error("Error finding orders by user ID", e);
