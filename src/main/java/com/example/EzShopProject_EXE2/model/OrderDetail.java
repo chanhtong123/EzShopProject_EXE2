@@ -33,4 +33,8 @@ public class OrderDetail {
     @JoinColumn(name = "order_id",nullable = false)
     @JsonBackReference
     private Order orders;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "shop_id",nullable = false)
+    private Shop shop;
 }

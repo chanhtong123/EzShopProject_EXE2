@@ -121,6 +121,7 @@ public class OrderService implements IOrderService {
                 orderDetail.setName(product.getName());
                 orderDetail.setPrice(product.getPrice());
                 orderDetail.setProduct(product);
+                orderDetail.setShop(cartDetail.getShop());
                 orderDetails.add(orderDetail);
             }
             cart.setOrderId(order.getId());
