@@ -178,9 +178,7 @@ public class OrderService implements IOrderService {
             orderDetail.setPrice(product.getPrice());
             orderDetail.setProduct(product);
             order.setPaymentStatus(orderDTO.getPaymentStatus());
-            if (order.getStatus() != null && order.getStatus() == OrderStatus.Completed) {
-                updateProductQuantities(orderDTO.getCartItems());
-            }
+            updateProductQuantities(orderDTO.getCartItems());
             orderDetails.add(orderDetail);
         }
         orderDetailRepository.saveAll(orderDetails);
